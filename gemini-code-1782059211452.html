@@ -1,0 +1,961 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ms Lê Hằng English - Interactive English Test</title>
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;600;700&family=Nunito:wght@400;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-bg: linear-gradient(-45deg, #8854C0, #00C9A7, #FDCB6E, #E84393);
+            --correct-color: #00D26A;
+            --wrong-color: #FF4757;
+            --card-bg: rgba(255, 255, 255, 0.95);
+            --shadow: 0 10px 0 rgba(0,0,0,0.1);
+        }
+
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        @keyframes floating {
+            0% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(5deg); }
+            100% { transform: translateY(0px) rotate(0deg); }
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Quicksand', sans-serif;
+            background: var(--primary-bg);
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* SVG Patterns */
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M30 30c0-1.1.9-2 2-2h10a2 2 0 0 1 2 2 2 2 0 0 1-2 2H32a2 2 0 0 1-2-2zm-10-10c0-1.1.9-2 2-2h10a2 2 0 0 1 2 2 2 2 0 0 1-2 2H22a2 2 0 0 1-2-2z' fill='%23ffffff' fill-opacity='0.1'/%3E%3Ccircle cx='10' cy='10' r='2' fill='%23ffffff' fill-opacity='0.1'/%3E%3C/svg%3E");
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        header {
+            text-align: center;
+            padding: 20px;
+            z-index: 10;
+            color: white;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        h1 { font-family: 'Nunito', sans-serif; font-size: 2.5rem; margin-bottom: 0; }
+        h4 { margin-top: 5px; opacity: 0.9; font-weight: 400; }
+
+        #test-container {
+            width: 90%;
+            max-width: 800px;
+            z-index: 1;
+            padding-bottom: 100px;
+        }
+
+        .exercise-title {
+            background: #FF7675;
+            color: white;
+            padding: 15px 25px;
+            border-radius: 20px;
+            margin-top: 40px;
+            box-shadow: 0 6px 0 #D63031;
+            font-family: 'Nunito', sans-serif;
+            text-transform: uppercase;
+        }
+
+        .question-card {
+            background: var(--card-bg);
+            border-radius: 30px;
+            padding: 30px;
+            margin: 25px 0;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+            border: 4px solid white;
+        }
+
+        .question-text {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #2D3436;
+            margin-bottom: 20px;
+            line-height: 1.5;
+        }
+
+        .options-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        @media (max-width: 600px) {
+            .options-grid { grid-template-columns: 1fr; }
+        }
+
+        .option-btn {
+            padding: 15px 20px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            font-family: 'Quicksand', sans-serif;
+            background: white;
+            border: 3px solid #DFE6E9;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.2s;
+            box-shadow: 0 6px 0 #DFE6E9;
+            position: relative;
+            outline: none;
+        }
+
+        .option-btn:hover {
+            transform: translateY(-3px);
+            border-color: #81ecec;
+            box-shadow: 0 9px 0 #81ecec;
+        }
+
+        .option-btn:active {
+            transform: translateY(3px);
+            box-shadow: 0 2px 0 #DFE6E9;
+        }
+
+        .option-btn.correct {
+            background-color: var(--correct-color) !important;
+            color: white !important;
+            border-color: #00B359 !important;
+            box-shadow: 0 6px 0 #00B359 !important;
+        }
+
+        .option-btn.wrong {
+            background-color: var(--wrong-color) !important;
+            color: white !important;
+            border-color: #D63031 !important;
+            box-shadow: 0 6px 0 #D63031 !important;
+            animation: shake 0.4s;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-10px); }
+            75% { transform: translateX(10px); }
+        }
+
+        .explanation {
+            margin-top: 20px;
+            padding: 20px;
+            background: #f8faff;
+            border-left: 8px solid #0984e3;
+            border-radius: 15px;
+            display: none;
+            font-size: 1rem;
+            color: #34495e;
+            line-height: 1.6;
+        }
+
+        .explanation h5 { color: #0984e3; margin-top: 0; font-size: 1.1rem; }
+
+        /* Jumbled words / Input styling */
+        .input-area {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+        .text-input {
+            flex: 1;
+            padding: 12px 20px;
+            border-radius: 15px;
+            border: 3px solid #dfe6e9;
+            font-family: 'Nunito', sans-serif;
+            font-size: 1.1rem;
+            outline: none;
+        }
+        .check-btn {
+            background: #6C5CE7;
+            color: white;
+            border: none;
+            padding: 10px 25px;
+            border-radius: 15px;
+            box-shadow: 0 5px 0 #5849BE;
+            cursor: pointer;
+            font-weight: 700;
+        }
+
+        /* Phone & Sale components */
+        .sale-sign {
+            background: #FFEB3B;
+            padding: 20px;
+            border: 5px dashed #F44336;
+            text-align: center;
+            font-weight: 800;
+            color: #F44336;
+            margin: 10px 0;
+            border-radius: 10px;
+        }
+        .phone-mockup {
+            background: #2d3436;
+            width: 200px;
+            padding: 20px 10px;
+            border-radius: 30px;
+            margin: 0 auto;
+            color: white;
+        }
+        .phone-screen {
+            background: #fff;
+            height: 150px;
+            border-radius: 10px;
+            color: #333;
+            padding: 10px;
+            font-size: 0.9rem;
+        }
+
+        /* Result Modal */
+        #result-modal {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.8);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+        .modal-content {
+            background: white;
+            padding: 40px;
+            border-radius: 40px;
+            text-align: center;
+            max-width: 400px;
+            width: 80%;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.3);
+        }
+        .score-circle {
+            width: 120px; height: 120px;
+            border-radius: 50%;
+            background: #fab1a0;
+            line-height: 120px;
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: white;
+            margin: 20px auto;
+            border: 8px solid #ff7675;
+        }
+        .submit-all-btn {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: #00B894;
+            color: white;
+            padding: 15px 40px;
+            border-radius: 50px;
+            font-size: 1.3rem;
+            font-weight: 800;
+            box-shadow: 0 8px 0 #009475;
+            cursor: pointer;
+            z-index: 100;
+            border: none;
+            transition: 0.2s;
+        }
+        .submit-all-btn:hover { transform: scale(1.1); }
+
+        canvas#confetti {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: none;
+            z-index: 999;
+        }
+
+        u { text-decoration: underline; font-weight: 800; color: #e84393; }
+
+        /* Gap Fill Dropdown Style */
+        .gap-select {
+            display: inline-block;
+            background: #fff;
+            border: 3px solid #81ecec;
+            border-radius: 10px;
+            padding: 5px 10px;
+            margin: 0 5px;
+            cursor: pointer;
+            font-weight: 700;
+            color: #0984e3;
+        }
+        .gap-select:empty::before { content: "........"; color: #b2bec3; }
+
+        .popup-menu {
+            position: absolute;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+            padding: 10px;
+            display: none;
+            z-index: 200;
+            width: 150px;
+        }
+        .popup-item {
+            padding: 8px 15px;
+            cursor: pointer;
+            border-radius: 8px;
+            font-weight: 600;
+        }
+        .popup-item:hover { background: #f0f0f0; }
+
+        /* Underline Mistakes style */
+        .word-token {
+            display: inline-block;
+            cursor: pointer;
+            padding: 2px 4px;
+            border-radius: 5px;
+            transition: background 0.2s;
+        }
+        .word-token:hover { background: #ffeaa7; }
+        .word-token.selected-wrong {
+            background: var(--wrong-color);
+            color: white;
+            text-decoration: line-through;
+        }
+    </style>
+</head>
+<body>
+
+<canvas id="confetti"></canvas>
+
+<header>
+    <h1>Vocabulary & Grammar Test</h1>
+    <h4>Ms Lê Hằng English</h4>
+</header>
+
+<div id="test-container">
+    </div>
+
+<button class="submit-all-btn" onclick="finishTest()">Nộp Bài / Submit</button>
+
+<div id="result-modal">
+    <div class="modal-content">
+        <h2 id="result-title">Tuyệt vời!</h2>
+        <div class="score-circle" id="score-text">0/0</div>
+        <p id="result-feedback">Bạn đã hoàn thành rất tốt bài tập này!</p>
+        <button class="check-btn" onclick="location.reload()">Làm lại / Retry</button>
+    </div>
+</div>
+
+<script>
+    // Audio Context for synthetic sounds
+    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+
+    function playSound(type) {
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+
+        if (type === 'correct') {
+            osc.frequency.setValueAtTime(523.25, audioCtx.currentTime); // C5
+            osc.frequency.exponentialRampToValueAtTime(880, audioCtx.currentTime + 0.1); // A5
+            gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.3);
+            osc.start();
+            osc.stop(audioCtx.currentTime + 0.3);
+        } else {
+            osc.type = 'sawtooth';
+            osc.frequency.setValueAtTime(220, audioCtx.currentTime); // A3
+            osc.frequency.exponentialRampToValueAtTime(110, audioCtx.currentTime + 0.2); // A2
+            gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.3);
+            osc.start();
+            osc.stop(audioCtx.currentTime + 0.3);
+        }
+    }
+
+    // Confetti effect
+    const canvas = document.getElementById('confetti');
+    const ctx = canvas.getContext('2d');
+    let particles = [];
+    function createConfetti() {
+        particles = [];
+        for(let i=0; i<100; i++) {
+            particles.push({
+                x: Math.random() * canvas.width,
+                y: Math.random() * canvas.height - canvas.height,
+                size: Math.random() * 10 + 5,
+                color: `hsl(${Math.random() * 360}, 70%, 50%)`,
+                speed: Math.random() * 5 + 2,
+                angle: Math.random() * 6.28
+            });
+        }
+        animateConfetti();
+    }
+    function animateConfetti() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        particles.forEach(p => {
+            p.y += p.speed;
+            p.angle += 0.1;
+            ctx.fillStyle = p.color;
+            ctx.save();
+            ctx.translate(p.x, p.y);
+            ctx.rotate(p.angle);
+            ctx.fillRect(-p.size/2, -p.size/2, p.size, p.size);
+            ctx.restore();
+        });
+        if(particles.length > 0 && particles[0].y < canvas.height * 1.5) {
+            requestAnimationFrame(animateConfetti);
+        }
+    }
+    window.addEventListener('resize', () => {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+    });
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    // Database
+    const testData = {
+        ex4: [
+            { id: 'ex4_1', q: 'c-l-a-c-u-l-t-a-o-r', a: 'calculator' },
+            { id: 'ex4_2', q: 'e-t-b-x-t-o-k-o', a: 'textbook' },
+            { id: 'ex4_3', q: 'c-p-o-s-a-s-m', a: 'compass' },
+            { id: 'ex4_4', q: 'r-e-u-l-r', a: 'ruler' },
+            { id: 'ex4_5', q: 'n-u-i-f-r-o-m', a: 'uniform' },
+            { id: 'ex4_6', q: 'a-b-o-d-r', a: 'board' },
+            { id: 'ex4_7', q: 'e-d-k-s', a: 'desk' },
+            { id: 'ex4_8', q: 'e-p-l-c-n-i', a: 'pencil' },
+            { id: 'ex4_9', q: 'b-y-i-c-l-c-e', a: 'bicycle' },
+            { id: 'ex4_10', q: 'p-n-e-i-c-l-a-c-s-e', a: 'pencil case' }
+        ],
+        ex5: [
+            { 
+                q: "Most schools require children to wear school ____.", 
+                o: ["equipment", "favourite", "uniforms", "creative"], 
+                a: "uniforms",
+                ex: "1. Dịch câu: Hầu hết các trường yêu cầu trẻ em mặc ___ trường.<br>2. Từ vựng: A. equipment: thiết bị; B. favourite: yêu thích; C. uniforms: đồng phục; D. creative: sáng tạo.<br>3. Tại sao đúng: Động từ 'wear' (mặc) thường đi với 'uniform' (đồng phục).<br>4. Tại sao sai: Các từ còn lại không phù hợp với động từ 'wear'."
+            },
+            { 
+                q: "We play ____ at break time.", 
+                o: ["exercise", "History", "judo", "football"], 
+                a: "football",
+                ex: "1. Dịch câu: Chúng mình chơi ___ vào giờ giải lao.<br>2. Từ vựng: A. exercise (bài tập); B. History (Lịch sử); C. judo (võ judo); D. football (bóng đá).<br>3. Tại sao đúng: Cấu trúc 'play football' là phổ biến nhất. Lưu ý: 'do judo' chứ không dùng 'play judo'.<br>4. Tại sao sai: Exercise đi với 'do', History là môn học, Judo đi với 'do'."
+            },
+            { 
+                q: "Children will work hard if the lessons are ____.", 
+                o: ["pleasant", "nice", "disappointing", "interesting"], 
+                a: "interesting",
+                ex: "1. Dịch câu: Trẻ em sẽ học tập chăm chỉ nếu bài học ___.<br>2. Từ vựng: A. pleasant: dễ chịu; B. nice: tốt; C. disappointing: gây thất vọng; D. interesting: thú vị.<br>3. Tại sao đúng: Bài học thú vị (interesting) là động lực để học sinh học chăm.<br>4. Tại sao sai: A và B không đủ mạnh để nói về bài học, C mang nghĩa tiêu cực."
+            },
+            { 
+                q: "Let’s ____ our school uniform and go to school.", 
+                o: ["wear on", "put on", "take off", "put off"], 
+                a: "put on",
+                ex: "1. Dịch câu: Hãy ___ đồng phục và đi học nào.<br>2. Từ vựng: A. wear (đang mặc); B. put on (mặc vào); C. take off (cởi ra); D. put off (trì hoãn).<br>3. Tại sao đúng: 'Put on' dùng để chỉ hành động bắt đầu mặc đồ vào.<br>4. Tại sao sai: 'Wear' dùng để chỉ trạng thái đang mặc, 'Take off' là cởi ra, 'Put off' là trì hoãn."
+            },
+            { 
+                q: "My friends do ____ to protect themselves.", 
+                o: ["exercise", "judo", "football", "Science"], 
+                a: "judo",
+                ex: "1. Dịch câu: Bạn mình tập ___ để bảo vệ bản thân.<br>2. Phân tích: Judo là môn võ tự vệ. Cấu trúc 'do judo'.<br>3. Giải thích 4 đáp án: A. exercise: thể dục; B. judo: võ judo; C. football: bóng đá; D. Science: Khoa học."
+            },
+            { 
+                q: "In many schools in Vietnam students have to wear a ____.", 
+                o: ["coat", "suit", "clothing", "uniform"], 
+                a: "uniform",
+                ex: "1. Dịch: Ở nhiều trường Việt Nam học sinh phải mặc đồng phục.<br>2. Từ vựng: A. áo khoác, B. bộ vest, C. quần áo nói chung, D. đồng phục."
+            },
+            { 
+                q: "____ school is a school where students study and live during the school year.", 
+                o: ["Primary", "Creative", "International", "Boarding"], 
+                a: "Boarding",
+                ex: "1. Dịch: Trường nội trú là nơi học sinh học và sống tại đó suốt năm học.<br>2. Từ vựng: D. Boarding school (trường nội trú) là định nghĩa đúng cho câu này."
+            },
+            { 
+                q: "AIS is an ____ school in Viet Nam. It provides American education.", 
+                o: ["international", "favourite", "creative", "excited"], 
+                a: "international",
+                ex: "1. Dịch: AIS là một trường quốc tế ở VN, dạy theo giáo dục Mỹ.<br>2. Từ vựng: international (quốc tế) phù hợp nhất ngữ cảnh."
+            },
+            { 
+                q: "Every day, I ride my ____ to school.", 
+                o: ["computer", "bicycle", "school bag", "football"], 
+                a: "bicycle",
+                ex: "Cấu trúc: ride a bicycle (đạp xe). Không thể 'ride' máy tính hay cặp sách được nhé!"
+            },
+            { 
+                q: "My sister is very ____. She is very good at painting pictures.", 
+                o: ["favourite", "creative", "international", "excited"], 
+                a: "creative",
+                ex: "Người giỏi vẽ tranh thường rất 'creative' (sáng tạo)."
+            },
+            { 
+                q: "We usually have ____ in the school canteen.", 
+                o: ["school lunch", "homework", "vocabulary", "lessons"], 
+                a: "school lunch",
+                ex: "Ăn ở canteen thì chỉ có thể là 'school lunch' (bữa trưa ở trường)."
+            },
+            { 
+                q: "What's your ____ subject? - I like English.", 
+                o: ["excited", "creative", "international", "favourite"], 
+                a: "favourite",
+                ex: "Khi hỏi về môn học yêu thích nhất, ta dùng 'favourite subject'."
+            },
+            { 
+                q: "Duy’s friends are waiting for him to put on his ____ so they can go to school together.", 
+                o: ["uniform", "notebook", "subject", "exercise"], 
+                a: "uniform",
+                ex: "Put on (mặc vào) -> chỉ có đồng phục (uniform) là mặc được."
+            },
+            { 
+                q: "It’s difficult calculation. Can I borrow your ____?", 
+                o: ["ruler", "schoolbag", "pencil case", "calculator"], 
+                a: "calculator",
+                ex: "Calculation (phép tính) -> cần máy tính (calculator)."
+            },
+            { 
+                q: "In ____ lessons, they learn about animals and plants.", 
+                o: ["history", "music", "English", "science"], 
+                a: "science",
+                ex: "Học về động vật và thực vật là môn Khoa học (Science)."
+            },
+            { 
+                q: "We have some new ____ in this school year: physics, computer science, etc.", 
+                o: ["teachers", "equipment", "subjects", "friends"], 
+                a: "subjects",
+                ex: "Lý, Tin học là các môn học (subjects)."
+            },
+            { 
+                q: "Wellspring Saigon is an ____ school.", 
+                o: ["internation", "internationality", "internationalise", "international"], 
+                a: "international",
+                ex: "Cần một tính từ đứng trước 'school' để bổ nghĩa. International (adj) là chính xác."
+            },
+            { 
+                q: "Children like to play ____.", 
+                o: ["football", "lesson", "housework", "physic"], 
+                a: "football",
+                ex: "Play + môn thể thao. Football là hợp lý nhất."
+            },
+            { 
+                q: "In many schools in Viet Nam students have to wear a ____.", 
+                o: ["suit", "uniform", "coat", "clothing"], 
+                a: "uniform",
+                ex: "Câu này lặp lại câu 6, đáp án vẫn là uniform (đồng phục)."
+            },
+            { 
+                q: "The children look very ____ while playing games during break time.", 
+                o: ["excited", "exciting", "excite", "excitement"], 
+                a: "excited",
+                ex: "Look + adj (chỉ cảm xúc con người) -> dùng đuôi -ed (excited)."
+            },
+            { 
+                q: "There are 30 ____ in my class.", 
+                o: ["students", "teachers", "lessons", "friends"], 
+                a: "students",
+                ex: "Trong lớp học thường nói về số lượng học sinh (students)."
+            },
+            { 
+                q: "Vy and Phong are ____ about their first day at secondary school.", 
+                o: ["favourite", "international", "creative", "excited"], 
+                a: "excited",
+                ex: "Hào hứng về cái gì đó: Excited about something."
+            },
+            { 
+                q: "You can use a ____ to draw circles.", 
+                o: ["notebook", "book", "compass", "rubber"], 
+                a: "compass",
+                ex: "Để vẽ hình tròn (draw circles), chúng mình cần compa (compass)."
+            },
+            { 
+                q: "Today we have two Art ____.", 
+                o: ["students", "computers", "projects", "lessons"], 
+                a: "lessons",
+                ex: "Có 2 tiết học Mỹ thuật (Art lessons)."
+            },
+            { 
+                q: "I rarely do ____ in the morning, but my sister usually does.", 
+                o: ["have", "marks", "exercise", "do"], 
+                a: "exercise",
+                ex: "Do exercise: Tập thể dục."
+            },
+            { 
+                q: "Thang is good at playing ____. He is the best footballer in my class.", 
+                o: ["exercise", "basketball", "football", "judo"], 
+                a: "football",
+                ex: "Vì Thang là 'footballer' (cầu thủ) nên bạn ấy giỏi 'football'."
+            },
+            { 
+                q: "Does your brother ____ English and literature on Mondays?", 
+                o: ["have", "marks", "exercise", "do"], 
+                a: "have",
+                ex: "Have + tên môn học: Có tiết học môn đó."
+            },
+            { 
+                q: "We learn about ____ in IT.", 
+                o: ["bicycle", "projector", "computer", "globe"], 
+                a: "computer",
+                ex: "IT (Tin học) thì chắc chắn học về máy tính (computer) rồi!"
+            },
+            { 
+                q: "That is the ____ where we do all our experiments.", 
+                o: ["laborious", "labor", "laboratorian", "laboratory"], 
+                a: "laboratory",
+                ex: "Nơi làm thí nghiệm (experiments) là phòng thí nghiệm (laboratory)."
+            },
+            { 
+                q: "I usually do my ____ after dinner.", 
+                o: ["exercise", "lessons", "vocabulary", "homework"], 
+                a: "homework",
+                ex: "Do homework: Làm bài tập về nhà."
+            },
+            { 
+                q: "They are ____ because they do judo every day.", 
+                o: ["healthfulness", "healthily", "healthy", "healthful"], 
+                a: "healthy",
+                ex: "Họ khỏe mạnh (healthy) vì tập võ mỗi ngày."
+            },
+            { 
+                q: "In the ____ you can read books and newspapers or borrow them to read at home.", 
+                o: ["canteen", "library", "gym", "classroom"], 
+                a: "library",
+                ex: "Nơi đọc và mượn sách là thư viện (library)."
+            },
+            { 
+                q: "I stick new words on the wall to learn ____.", 
+                o: ["English", "vocabulary", "homework", "Physics"], 
+                a: "vocabulary",
+                ex: "Dán từ mới (new words) để học từ vựng (vocabulary)."
+            },
+            { 
+                q: "Nam lives far from school, so he studies at a ____ school.", 
+                o: ["international", "boarding", "creative", "favourite"], 
+                a: "boarding",
+                ex: "Nhà xa nên học ở trường nội trú (boarding school) để ở lại trường luôn."
+            },
+            { 
+                q: "Susan usually gets good ____ in exams.", 
+                o: ["do", "have", "marks", "exercise"], 
+                a: "marks",
+                ex: "Get good marks: Đạt điểm cao."
+            },
+            { 
+                q: "Our school has one ____. This connects to a computer.", 
+                o: ["desk", "projector", "clock", "globe"], 
+                a: "projector",
+                ex: "Cái máy nối với máy tính để chiếu hình lên là máy chiếu (projector)."
+            },
+            { 
+                q: "The school gym has lots of new and modern ____.", 
+                o: ["library", "uniforms", "equipment", "classmates"], 
+                a: "equipment",
+                ex: "Modern equipment: Trang thiết bị hiện đại."
+            },
+            { 
+                q: "Carol believes that do ____ regularly is a good way to be healthy.", 
+                o: ["gymnast", "gymnastically", "gymnastics", "gymnasium"], 
+                a: "gymnastics",
+                ex: "Do gymnastics: Tập thể dục dụng cụ."
+            },
+            { 
+                q: "The students always remember to ____ their homework.", 
+                o: ["do", "marks", "exercise", "have"], 
+                a: "do",
+                ex: "Lại là cấu trúc 'do homework' quen thuộc nè các bạn!"
+            },
+            { 
+                q: "Thanh and Duy are in the same class at school. They are ____.", 
+                o: ["teachers", "friends", "classmates", "students"], 
+                a: "classmates",
+                ex: "Học cùng lớp là bạn cùng lớp (classmates)."
+            },
+            { 
+                q: "After school they usually ____ football.", 
+                o: ["study", "play", "make", "do"], 
+                a: "play",
+                ex: "Play football."
+            },
+            { 
+                q: "When my friend misses the lessons, I always ____ him my notes.", 
+                o: ["lend", "borrow", "takes", "send"], 
+                a: "lend",
+                ex: "Cho ai đó mượn cái gì: Lend someone something."
+            },
+            { 
+                q: "Jenny put ____ coat and went out.", 
+                o: ["about", "on", "in", "at"], 
+                a: "on",
+                ex: "Put on: Mặc quần áo vào."
+            },
+            { 
+                q: "A good friend is ready to ____ things with his/ her classmates.", 
+                o: ["study", "share", "do", "play"], 
+                a: "share",
+                ex: "Bạn tốt thì luôn sẵn lòng chia sẻ (share) mọi thứ."
+            },
+            { 
+                q: "I'm always nervous when I'm ____ an exam.", 
+                o: ["working", "making", "taking", "writing"], 
+                a: "taking",
+                ex: "Take an exam: Đi thi / làm bài kiểm tra."
+            },
+            { 
+                q: "- ____ class are you in? - Class 6B.", 
+                o: ["Which", "When", "Whose", "Where"], 
+                a: "Which",
+                ex: "Hỏi lựa chọn (lớp nào trong số nhiều lớp): dùng Which."
+            },
+            { 
+                q: "That is the laboratory ____ we do all our experiments.", 
+                o: ["which", "when", "that", "where"], 
+                a: "where",
+                ex: "Dùng 'where' để thay thế cho một địa điểm (phòng thí nghiệm)."
+            },
+            { 
+                q: "- How's your class this year? - Great. ____ forty-seven students, and they are good friends.", 
+                o: ["There're", "It's", "They're", "There's"], 
+                a: "There're",
+                ex: "Dùng 'There are' (viết tắt There're) để chỉ sự tồn tại của số nhiều (47 học sinh)."
+            },
+            { 
+                q: "School ____ at 4.30 p.m every day.", 
+                o: ["are finishing", "finishes", "finish", "is finishing"], 
+                a: "finishes",
+                ex: "Thì hiện tại đơn chỉ lịch trình. 'School' là số ít nên thêm -es vào finish."
+            },
+            { 
+                q: "Cuong and Minh ____ their bicycles to school form Monday to Friday.", 
+                o: ["are riding", "is riding", "rides", "ride"], 
+                a: "ride",
+                ex: "Chủ ngữ số nhiều (Cuong và Minh) -> động từ giữ nguyên ở hiện tại đơn."
+            },
+            { 
+                q: "They sometimes go home ____ weekends.", 
+                o: ["about", "on", "at", "in"], 
+                a: "at",
+                ex: "Cụm từ: at weekends (vào cuối tuần)."
+            },
+            { 
+                q: "I'm absolutely not good ____ all any kind of sport.", 
+                o: ["on", "for", "at", "with"], 
+                a: "at",
+                ex: "Be good at: Giỏi về cái gì."
+            },
+            { 
+                q: "We have English and Vietnamese ____ Tuesday.", 
+                o: ["on", "in", "at", "about"], 
+                a: "on",
+                ex: "Dùng 'on' trước các thứ trong tuần."
+            },
+            { 
+                q: "The children are excited ____ the holiday.", 
+                o: ["on", "at", "about", "in"], 
+                a: "about",
+                ex: "Be excited about: Hào hứng về cái gì."
+            },
+            { 
+                q: "She goes home ____ 4 o'clock every day.", 
+                o: ["in", "about", "on", "at"], 
+                a: "at",
+                ex: "Dùng 'at' trước mốc giờ cụ thể."
+            }
+        ],
+        ex6: [
+            { s: "We often don’t go to school by bus.", error: "often don’t", correct: "don’t often", ex: "Trạng từ chỉ tần suất đứng sau trợ động từ phủ định (don't/doesn't)." },
+            { s: "John go fishing when he has free time.", error: "go", correct: "goes", ex: "Chủ ngữ John (số ít) -> động từ go phải thêm -es thành goes." },
+            { s: "Where are you often do judo?", error: "are", correct: "do", ex: "Câu hỏi hiện tại đơn dùng trợ động từ do/does, không dùng are với động từ do." },
+            { s: "His parents is very friendly and helpful.", error: "is", correct: "are", ex: "Parents là số nhiều nên dùng are." },
+            { s: "I don’t speaks English very well.", error: "speaks", correct: "speak", ex: "Sau don't động từ phải giữ nguyên mẫu." }
+        ],
+        ex7: [
+            { q: "All the lessons at my new school are very <u>interesting</u>.", o: ["boring", "exciting", "outgoing", "humorous"], a: "exciting", ex: "Interesting = Exciting: Thú vị, hào hứng." },
+            { q: "There are 30 children in his class, and it’s <u>difficult</u> for the teacher to teach all of them.", o: ["hard", "simple", "early", "easy"], a: "hard", ex: "Difficult = Hard: Khó khăn." }
+        ],
+        ex8: [
+            { q: "Everyday, he comes to school very early to <u>open</u> all the windows.", o: ["close", "start", "clean", "learn"], a: "close", ex: "Trái nghĩa với Open (mở) là Close (đóng)." },
+            { q: "Jim went for a walk and found a <u>big</u> box between some rocks.", o: ["same", "small", "large", "modern"], a: "small", ex: "Trái nghĩa với Big (to) là Small (nhỏ)." }
+        ],
+        ex9: [
+            { q: "We sometimes __________ books. (read)", a: "read" },
+            { q: "Emily usually __________ to the disco. (go)", a: "goes" },
+            { q: "It often __________ on Sundays. (rain)", a: "rains" },
+            { q: "Pete and his sister often __________ the family's car. (wash)", a: "wash" },
+            { q: "Charlie __________ eggs. (not eat)", a: "doesn’t eat" }
+        ],
+        ex10: [
+            { q: "I help my mother in the kitchen. (always)", a: "I always help my mother in the kitchen." },
+            { q: "My teacher is late for lessons. (never)", a: "My teacher is never late for lessons." },
+            { q: "Do you go to the zoo with your parents? (often)", a: "Do you often go to the zoo with your parents?" }
+        ]
+    };
+
+    let totalScore = 0;
+    let questionsAnswered = 0;
+
+    function renderTest() {
+        const container = document.getElementById('test-container');
+
+        // EX 4
+        container.innerHTML += `<div class="exercise-title">Exercise 4: Jumbled words</div>`;
+        testData.ex4.forEach(item => {
+            container.innerHTML += `
+                <div class="question-card" id="card_${item.id}">
+                    <div class="question-text">Sắp xếp các chữ cái: <b>${item.q}</b></div>
+                    <div class="input-area">
+                        <input type="text" class="text-input" id="input_${item.id}" placeholder="Viết từ đúng vào đây...">
+                        <button class="check-btn" onclick="checkInput('${item.id}', '${item.a}')">Kiểm tra</button>
+                    </div>
+                    <div class="explanation" id="ex_${item.id}">
+                        <h5>Ms Lê Hằng English giải thích:</h5>
+                        Từ đúng là: <b>${item.a}</b>
+                    </div>
+                </div>
+            `;
+        });
+
+        // EX 5
+        container.innerHTML += `<div class="exercise-title">Exercise 5: Multiple Choice</div>`;
+        testData.ex5.forEach((item, idx) => {
+            const qId = `ex5_${idx}`;
+            container.innerHTML += `
+                <div class="question-card" id="card_${qId}">
+                    <div class="question-text">Question ${idx + 1}: ${item.q}</div>
+                    <div class="options-grid">
+                        ${item.o.map(opt => `<button class="option-btn" onclick="checkChoice(this, '${opt}', '${item.a}', '${qId}')">${opt}</button>`).join('')}
+                    </div>
+                    <div class="explanation" id="ex_${qId}">
+                        <h5>Ms Lê Hằng English giải thích:</h5>
+                        ${item.ex}
+                    </div>
+                </div>
+            `;
+        });
+
+        // EX 6
+        container.innerHTML += `<div class="exercise-title">Exercise 6: Underline & Correct Mistakes</div>`;
+        testData.ex6.forEach((item, idx) => {
+            const qId = `ex6_${idx}`;
+            container.innerHTML += `
+                <div class="question-card">
+                    <div class="question-text">${idx+1}. ${item.s}</div>
+                    <p>Lỗi sai là: <b>${item.error}</b> -> Sửa thành: <b>${item.correct}</b></p>
+                    <button class="check-btn" onclick="showEx('${qId}')">Xem giải thích</button>
+                    <div class="explanation" id="ex_${qId}">
+                        <h5>Ms Lê Hằng English giải thích:</h5>
+                        ${item.ex}
+                    </div>
+                </div>
+            `;
+        });
+
+        // EX 7 & 8
+        container.innerHTML += `<div class="exercise-title">Exercise 7 & 8: Closest & Opposite</div>`;
+        [...testData.ex7, ...testData.ex8].forEach((item, idx) => {
+            const qId = `ex78_${idx}`;
+            container.innerHTML += `
+                <div class="question-card" id="card_${qId}">
+                    <div class="question-text">${item.q}</div>
+                    <div class="options-grid">
+                        ${item.o.map(opt => `<button class="option-btn" onclick="checkChoice(this, '${opt}', '${item.a}', '${qId}')">${opt}</button>`).join('')}
+                    </div>
+                    <div class="explanation" id="ex_${qId}">
+                        <h5>Ms Lê Hằng English giải thích:</h5>
+                        ${item.ex}
+                    </div>
+                </div>
+            `;
+        });
+
+        // EX 9
+        container.innerHTML += `<div class="exercise-title">Exercise 9: Present Simple</div>`;
+        testData.ex9.forEach((item, idx) => {
+            const qId = `ex9_${idx}`;
+            container.innerHTML += `
+                <div class="question-card">
+                    <div class="question-text">${item.q}</div>
+                    <div class="input-area">
+                        <input type="text" class="text-input" id="input_${qId}" placeholder="...">
+                        <button class="check-btn" onclick="checkInput('${qId}', '${item.a}')">Check</button>
+                    </div>
+                    <div class="explanation" id="ex_${qId}">
+                        <h5>Ms Lê Hằng English giải thích:</h5>
+                        Đáp án: <b>${item.a}</b>
+                    </div>
+                </div>
+            `;
+        });
+    }
+
+    function checkChoice(btn, selected, correct, qId) {
+        if (btn.parentElement.classList.contains('answered')) return;
+        
+        const card = document.getElementById(`card_${qId}`);
+        const ex = document.getElementById(`ex_${qId}`);
+        btn.parentElement.classList.add('answered');
+
+        if (selected === correct) {
+            btn.classList.add('correct');
+            playSound('correct');
+            totalScore++;
+        } else {
+            btn.classList.add('wrong');
+            playSound('wrong');
+            // Highlight the correct one
+            const buttons = btn.parentElement.querySelectorAll('.option-btn');
+            buttons.forEach(b => {
+                if (b.innerText === correct) b.classList.add('correct');
+            });
+        }
+        ex.style.display = 'block';
+        questionsAnswered++;
+    }
+
+    function checkInput(id, correct) {
+        const input = document.getElementById(`input_${id}`);
+        const ex = document.getElementById(`ex_${id}`);
+        
+        if (input.value.toLowerCase().trim() === correct.toLowerCase()) {
+            input.style.borderColor = "var(--correct-color)";
+            playSound('correct');
+            totalScore++;
+        } else {
+            input.style.borderColor = "var(--wrong-color)";
+            playSound('wrong');
+        }
+        ex.style.display = "block";
+        questionsAnswered++;
+    }
+
+    function showEx(id) {
+        document.getElementById(`ex_${id}`).style.display = 'block';
+    }
+
+    function finishTest() {
+        const modal = document.getElementById('result-modal');
+        const scoreText = document.getElementById('score-text');
+        const feedback = document.getElementById('result-feedback');
+        
+        scoreText.innerText = `${totalScore}/${questionsAnswered || 0}`;
+        
+        if (totalScore > 10) {
+            createConfetti();
+            document.getElementById('result-title').innerText = "Tuyệt vời ông mặt trời!";
+        } else {
+            document.getElementById('result-title').innerText = "Cố gắng lên nhé!";
+        }
+        
+        modal.style.display = 'flex';
+    }
+
+    renderTest();
+</script>
+
+</body>
+</html>

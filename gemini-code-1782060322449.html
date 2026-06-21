@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reading Mock Test - True / False / Not Given</title>
+    <style>
+        /* Sửa lỗi cuộn: Đảm bảo trang có thể cuộn tự nhiên */
+        html, body {
+            height: auto;
+            min-height: 100%;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f6f9;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 20px auto;
+            padding: 20px;
+            background: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 30px;
+        }
+
+        /* Giao diện chia 2 cột: Bài đọc bên trái, Câu hỏi bên phải */
+        .quiz-layout {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+        }
+
+        @media (max-width: 850px) {
+            .quiz-layout {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Vùng bài đọc */
+        .reading-passage {
+            background: #fafafa;
+            padding: 20px;
+            border-left: 5px solid #3498db;
+            border-radius: 4px;
+            max-height: 600px; /* Giới hạn chiều cao riêng cho khung bài đọc để dễ đối chiếu */
+            overflow-y: auto; /* Tự động xuất hiện thanh cuộn riêng nếu bài quá dài */
+        }
+
+        .reading-passage h2 {
+            margin-top: 0;
+            color: #2980b9;
+        }
+
+        /* Vùng câu hỏi */
+        .questions-section {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .question-item {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 6px;
+            border: 1px solid #e2e8f0;
+        }
+
+        /* Style cho thanh chọn kéo thả (Dropdown) */
+        .select-box {
+            display: inline-block;
+            margin-top: 10px;
+            position: relative;
+        }
+
+        .select-box select {
+            padding: 8px 30px 8px 12px;
+            font-size: 14px;
+            font-weight: 600;
+            color: #4a5568;
+            background-color: #fff;
+            border: 2px solid #cbd5e0;
+            border-radius: 6px;
+            cursor: pointer;
+            outline: none;
+            transition: all 0.2s ease;
+            appearance: none; /* Ẩn mũi tên mặc định */
+            -webkit-appearance: none;
+        }
+
+        /* Tạo mũi tên custom cho đẹp */
+        .select-box::after {
+            content: "▼";
+            font-size: 10px;
+            color: #a0aec0;
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            pointer-events: none;
+        }
+
+        .select-box select:focus {
+            border-color: #3182ce;
+            box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.5);
+        }
+
+        /* Nút nộp bài */
+        .submit-btn {
+            background-color: #2ecc71;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            font-size: 16px;
+            font-weight: bold;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background 0.2s;
+            align-self: flex-start;
+            margin-top: 10px;
+        }
+
+        .submit-btn:hover {
+            background-color: #27ae60;
+        }
+
+        /* Vùng hiển thị kết quả */
+        #result {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 6px;
+            font-weight: bold;
+            display: none;
+        }
+
+        .success {
+            background-color: #c6f6d5;
+            color: #22543d;
+            border: 1px solid #9ae6b4;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>IELTS READING MOCK TEST</h1>
+
+    <div class="quiz-layout">
+        <!-- BÊN TRÁI: BÀI ĐỌC -->
+        <div class="reading-passage">
+            <h2>The Growth of Cities</h2>
+            <p>The rise of megacities across the globe has transformed human society. In 1950, only New York and Tokyo boasted populations over 10 million. Today, there are dozens of such urban centers spread across every continent.</p>
+            <p>While urbanization drives economic growth and technological innovation, it also presents severe environmental challenges. Air pollution, inadequate waste management, and water scarcity are common issues threatening the quality of life in these massive hubs.</p>
+            <p>Experts suggest that the future of cities relies heavily on smart infrastructure. Investing in renewable energy and green public transport could potentially mitigate the ecological footprint of urban sprawl.</p>
+        </div>
+
+        <!-- BÊN PHẢI: CÂU HỎI KÉO THẢ -->
+        <div class="questions-section">
+            <form id="quizForm">
+                
+                <!-- Câu 1 -->
+                <div class="question-item">
+                    <p><strong>Question 1:</strong> In 1950, New York and Tokyo were the only cities with a population exceeding 10 million.</p>
+                    <div class="select-box">
+                        <select class="answer-select" data-correct="TRUE">
+                            <option value="" disabled selected>-- Chọn đáp án --</option>
+                            <option value="TRUE">TRUE</option>
+                            <option value="FALSE">FALSE</option>
+                            <option value="NOT GIVEN">NOT GIVEN</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Câu 2 -->
+                <div class="question-item">
+                    <p><strong>Question 2:</strong> Urbanization has had a purely negative impact on human economic development.</p>
+                    <div class="select-box">
+                        <select class="answer-select" data-correct="FALSE">
+                            <option value="" disabled selected>-- Chọn đáp án --</option>
+                            <option value="TRUE">TRUE</option>
+                            <option value="FALSE">FALSE</option>
+                            <option value="NOT GIVEN">NOT GIVEN</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Câu 3 -->
+                <div class="question-item">
+                    <p><strong>Question 3:</strong> London is expected to become a smart city by the year 2030.</p>
+                    <div class="select-box">
+                        <select class="answer-select" data-correct="NOT GIVEN">
+                            <option value="" disabled selected>-- Chọn đáp án --</option>
+                            <option value="TRUE">TRUE</option>
+                            <option value="FALSE">FALSE</option>
+                            <option value="NOT GIVEN">NOT GIVEN</option>
+                        </select>
+                    </div>
+                </div>
+
+                <button type="button" class="submit-btn" onclick="checkAnswers()">Nộp bài</button>
+            </form>
+
+            <div id="result"></div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function checkAnswers() {
+        const selects = document.querySelectorAll('.answer-select');
+        let score = 0;
+        let total = selects.length;
+        let allAnswered = true;
+
+        selects.forEach(select => {
+            if (!select.value) {
+                allAnswered = false;
+            }
+        });
+
+        if (!allAnswered) {
+            alert("Vui lòng chọn đầy đủ đáp án trước khi nộp bài!");
+            return;
+        }
+
+        selects.forEach(select => {
+            const correctAnswer = select.getAttribute('data-correct');
+            const parentItem = select.closest('.question-item');
+            
+            if (select.value === correctAnswer) {
+                score++;
+                parentItem.style.borderLeft = "5px solid #2ecc71"; // Đổi viền xanh nếu đúng
+                parentItem.style.backgroundColor = "#f0fff4";
+            } else {
+                parentItem.style.borderLeft = "5px solid #e74c3c"; // Đổi viền đỏ nếu sai
+                parentItem.style.backgroundColor = "#fff5f5";
+            }
+        });
+
+        const resultDiv = document.getElementById('result');
+        resultDiv.className = "success";
+        resultDiv.style.display = "block";
+        resultDiv.innerHTML = `Bạn đã hoàn thành bài thi! Kết quả: ${score}/${total} câu đúng.`;
+        
+        // Cuộn xuống chỗ hiển thị kết quả để học sinh dễ nhìn
+        resultDiv.scrollIntoView({ behavior: 'smooth' });
+    }
+</script>
+
+</body>
+</html>

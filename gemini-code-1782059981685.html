@@ -1,0 +1,1903 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BÀI KIỂM TRA TRẮC NGHIỆM READING - MS LÊ HẰNG ENGLISH</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@500;700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary-bg: linear-gradient(-45deg, #8854C0, #FDCB6E, #00C9A7, #E84393);
+            --card-bg: rgba(255, 255, 255, 0.93);
+            --correct-color: #00D26A;
+            --wrong-color: #FF4757;
+            --text-main: #2D3436;
+            --accent-purple: #6C5CE7;
+        }
+
+        * {
+            box-sizing: border-box;
+            font-family: 'Quicksand', sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background: var(--primary-bg);
+            background-size: 400% 400%;
+            animation: gradientBG 20s ease infinite;
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* SVG Pattern Floating Overlay */
+        body::before {
+            content: "";
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            z-index: 0;
+            opacity: 0.15;
+            pointer-events: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 100 100'%3E%3Ctext x='10' y='30' font-size='20'%3E📚%3C/text%3E%3Ctext x='60' y='40' font-size='20'%3E✏️%3C/text%3E%3Ctext x='40' y='80' font-size='20'%3E🌟%3C/text%3E%3Ctext x='80' y='80' font-size='20'%3E🎒%3C/text%3E%3C/svg%3E");
+        }
+
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* Header Bar */
+        header {
+            background: white;
+            padding: 10px 20px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 10;
+            border-bottom: 4px solid #DFE6E9;
+        }
+
+        .teacher-info h3 {
+            font-size: 1rem;
+            color: var(--accent-purple);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .teacher-info h1 {
+            font-size: 1.3rem;
+            color: #2D3436;
+        }
+
+        /* Top Control Timer */
+        .timer-container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: #F1F2F6;
+            padding: 8px 15px;
+            border-radius: 30px;
+            border: 2px solid #CED6E0;
+        }
+
+        .timer-btn {
+            background: var(--accent-purple);
+            color: white;
+            border: none;
+            padding: 6px 15px;
+            border-radius: 20px;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 3px 0 #5758BB;
+            transition: all 0.1s;
+        }
+
+        .timer-btn:active {
+            transform: translateY(3px);
+            box-shadow: none;
+        }
+
+        #timer-display {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #2D3436;
+            min-width: 60px;
+            text-align: center;
+        }
+
+        /* Main Workspace Split-Screen */
+        .main-container {
+            display: flex;
+            flex: 1;
+            overflow: hidden;
+            position: relative;
+            z-index: 5;
+        }
+
+        .split {
+            width: 50%;
+            height: 100%;
+            overflow-y: auto;
+            padding: 25px;
+        }
+
+        .left-side {
+            border-right: 4px dashed rgba(0,0,0,0.1);
+            background: rgba(255, 255, 255, 0.4);
+        }
+
+        .right-side {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        /* Section Card Styles */
+        .exercise-section {
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 25px;
+            margin-bottom: 30px;
+            box-shadow: 0 8px 0 rgba(0, 0, 0, 0.1), 0 15px 25px rgba(0,0,0,0.05);
+            border: 3px solid #2D3436;
+        }
+
+        .section-title {
+            background: #FFEAA7;
+            padding: 10px 15px;
+            border-radius: 12px;
+            display: inline-block;
+            margin-bottom: 15px;
+            border: 2px solid #2D3436;
+            font-weight: bold;
+        }
+
+        /* Reading Text Passages */
+        .passage-box {
+            font-size: 1.1rem;
+            line-height: 1.7;
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            border: 2px solid #DFE6E9;
+            margin-bottom: 15px;
+            white-space: pre-line;
+        }
+
+        .translation-box {
+            display: none;
+            background: #E3F2FD;
+            border-left: 5px solid #2196F3;
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 10px;
+            font-style: italic;
+            font-size: 1rem;
+            line-height: 1.6;
+        }
+
+        .btn-translate {
+            background: #0984E3;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 12px;
+            cursor: pointer;
+            font-weight: bold;
+            box-shadow: 0 3px 0 #025AA5;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        /* Vocabulary Glossary Table */
+        .glossary-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            border: 2px solid #2D3436;
+        }
+
+        .glossary-table th {
+            background: #6C5CE7;
+            color: white;
+            padding: 12px;
+            text-align: left;
+        }
+
+        .glossary-table td {
+            padding: 10px 12px;
+            border-bottom: 1px solid #DFE6E9;
+            font-size: 0.95rem;
+        }
+
+        .glossary-table tr:nth-child(even) {
+            background: #F8F9FA;
+        }
+
+        /* Question Items */
+        .question-wrapper {
+            margin-bottom: 25px;
+            padding-bottom: 20px;
+            border-bottom: 2px dashed #DFE6E9;
+        }
+
+        .question-text {
+            font-size: 1.1rem;
+            font-weight: 700;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: flex-start;
+            gap: 8px;
+        }
+
+        /* Multiple Choice Options Buttons */
+        .options-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 12px;
+        }
+
+        .option-btn {
+            background: white;
+            border: 3px solid #CED6E0;
+            padding: 14px 20px;
+            border-radius: 15px;
+            text-align: left;
+            font-size: 1.05rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.1s, background-color 0.2s;
+            box-shadow: 0 5px 0 #CED6E0;
+            position: relative;
+        }
+
+        .option-btn:hover:not(.disabled) {
+            transform: scale(1.02);
+            background-color: #F1F2F6;
+        }
+
+        .option-btn:active:not(.disabled) {
+            transform: translateY(3px);
+            box-shadow: none;
+        }
+
+        /* Dynamic Feedback Colors */
+        .option-btn.correct-choice {
+            background-color: #00D26A !important;
+            color: white !important;
+            border-color: #10B981 !important;
+            box-shadow: 0 5px 0 #059669 !important;
+        }
+
+        .option-btn.wrong-choice {
+            background-color: #FF4757 !important;
+            color: white !important;
+            border-color: #EF4444 !important;
+            box-shadow: 0 5px 0 #DC2626 !important;
+            animation: shake 0.4s;
+        }
+
+        /* Inline Inline Interactive Blanks (True/False or Dropdown Cloze) */
+        .inline-blank {
+            display: inline-block;
+            background: #DFE6E9;
+            border: 2px dashed #747D8C;
+            padding: 2px 15px;
+            border-radius: 8px;
+            font-weight: bold;
+            color: #747D8C;
+            cursor: pointer;
+            margin: 0 5px;
+            transition: all 0.2s;
+        }
+        
+        .inline-blank.revealed-t {
+            background: #00D26A;
+            color: white;
+            border-style: solid;
+            border-color: #10B981;
+        }
+        
+        .inline-blank.revealed-f {
+            background: #FF4757;
+            color: white;
+            border-style: solid;
+            border-color: #EF4444;
+        }
+
+        /* Explanation Card Container */
+        .explanation-panel {
+            display: none;
+            background: #F9F8FF;
+            border: 2px solid #6C5CE7;
+            border-radius: 12px;
+            padding: 15px;
+            margin-top: 15px;
+            font-size: 0.95rem;
+        }
+
+        .explanation-panel blockquote {
+            background: #FFFFFF;
+            border-left: 4px solid #00C9A7;
+            padding: 8px 12px;
+            margin: 10px 0;
+            font-weight: bold;
+        }
+
+        /* Submit Bottom Bar */
+        .action-bar {
+            padding: 20px;
+            background: white;
+            text-align: center;
+            border-top: 4px solid #DFE6E9;
+            z-index: 10;
+        }
+
+        .btn-submit {
+            background: #FF4757;
+            color: white;
+            font-size: 1.3rem;
+            font-weight: bold;
+            padding: 12px 50px;
+            border: 3px solid #2D3436;
+            border-radius: 20px;
+            cursor: pointer;
+            box-shadow: 0 6px 0 #C23616;
+            transition: all 0.1s;
+        }
+
+        .btn-submit:active {
+            transform: translateY(4px);
+            box-shadow: none;
+        }
+
+        /* Modal Score Board Styling */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top:0; left:0; width:100%; height:100%;
+            background: rgba(0,0,0,0.7);
+            z-index: 100;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .score-card {
+            background: white;
+            border: 4px solid #2D3436;
+            border-radius: 25px;
+            max-width: 550px;
+            width: 100%;
+            padding: 30px;
+            text-align: center;
+            box-shadow: 0 15px 0 #2D3436;
+            transform: scale(0.8);
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .score-card.open {
+            transform: scale(1);
+        }
+
+        .score-num {
+            font-size: 4rem;
+            color: var(--accent-purple);
+            font-weight: bold;
+            margin: 15px 0;
+        }
+
+        .score-feedback {
+            font-size: 1.3rem;
+            font-weight: bold;
+            margin-bottom: 20px;
+            color: #2D3436;
+        }
+
+        .btn-close-modal {
+            background: #00C9A7;
+            color: white;
+            border: 2px solid #2D3436;
+            padding: 10px 25px;
+            border-radius: 15px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 4px 0 #019A80;
+        }
+
+        /* Animations */
+        @keyframes shake {
+            0% { transform: translateX(0); }
+            25% { transform: translateX(-8px); }
+            50% { transform: translateX(6px); }
+            75% { transform: translateX(-4px); }
+            100% { transform: translateX(0); }
+        }
+
+        /* Confetti canvas */
+        #confetti-canvas {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: none;
+            z-index: 99;
+        }
+
+        /* Responsive */
+        @media(max-width: 900px) {
+            .main-container { flex-direction: column; overflow-y: auto; }
+            .split { width: 100%; height: auto; overflow-y: visible; }
+            body { overflow: auto; }
+        }
+    </style>
+</head>
+<body>
+
+    <canvas id="confetti-canvas"></canvas>
+
+    <!-- HEADER TOP CONTROL BAR -->
+    <header>
+        <div class="teacher-info">
+            <h3>Giáo viên tạo: Ms Lê Hằng English 🌟</h3>
+            <h1>Học Phần Đọc Hiểu Tổng Hợp (Reading Skills)</h1>
+        </div>
+        <div class="timer-container">
+            <button class="timer-btn" id="timer-toggle-btn" onclick="toggleTimer()">BẮT ĐẦU TÍNH GIỜ LÀM BÀI</button>
+            <div id="timer-display">10:00</div>
+        </div>
+    </header>
+
+    <!-- MAIN WORKSPACE -->
+    <div class="main-container">
+        
+        <!-- LEFT SIDE: READING PASSAGES & TRANSLATIONS & GLOSSARY -->
+        <div class="split left-side">
+            
+            <!-- PASSAGE 1 -->
+            <div class="exercise-section">
+                <div class="section-title">Bài Đọc 1: Vernon's School Day (Ex 15)</div>
+                <div class="passage-box" id="p1">
+                    Vernon goes to school from Monday to Friday. He has many subjects at school: English, art, science, mathematics, PE, and history.
+                    His first class is English, and he likes that teacher very much. His English teacher says that he is a good pupil, which makes him very happy. His next class is art. He draws on paper with crayons and pencils and sometimes uses a ruler. Vernon likes art. It is his favorite class. His third class is science. This class is very hard for Vernon to understand, but he gets to work with his classmates a lot, which he likes to do. His friend, Wendy, works with Vernon in science class, and they have fun. The next class is mathematics, which most of the students just call math. Wendy has trouble getting a good grade in mathematics, but the teacher is very nice and helpful. His fourth class is PE. It is just exercising. History is his last class of the day Vernon has a hard time staying awake. Many lessons are boring, and he is very tired after doing gym.
+                </div>
+                <button class="btn-translate" onclick="toggleTranslation('trans1')">Mở dịch đoạn này 🌟</button>
+                <div class="translation-box" id="trans1">
+                    Vernon đi học từ thứ Hai đến thứ Sáu. Cậu ấy có nhiều môn học ở trường: tiếng Anh, mỹ thuật, khoa học, toán học, thể dục (PE), và lịch sử.<br><br>
+                    Tiết học đầu tiên của cậu là tiếng Anh, và cậu rất thích giáo viên dạy môn đó. Giáo viên tiếng Anh nói rằng cậu là một học sinh ngoan, điều này làm cậu rất vui. Tiết tiếp theo là mỹ thuật. Cậu vẽ trên giấy bằng bút màu sáp, bút chì và đôi khi sử dụng thước kẻ. Vernon thích mỹ thuật. Đó là tiết học yêu thích nhất của cậu. Tiết thứ ba của cậu là khoa học. Tiết này rất khó để Vernon hiểu, nhưng cậu được làm việc nhóm cùng các bạn cùng lớp rất nhiều, điều mà cậu rất thích. Bạn của cậu, Wendy, làm việc cùng Vernon trong lớp khoa học, và họ học rất vui vẻ. Tiết học tiếp theo là toán học, môn mà hầu hết học sinh chỉ gọi tắt là math. Wendy gặp khó khăn trong việc đạt điểm cao môn toán, nhưng giáo viên rất tốt bụng và tận tình giúp đỡ. Tiết thứ tư của cậu là thể dục. Môn này chỉ là tập thể dục thể thao. Lịch sử là tiết học cuối cùng trong ngày của Vernon, cậu gặp khó khăn trong việc giữ cho mình tỉnh táo. Nhiều bài học rất nhàm chán, và cậu ấy rất mệt mỏi sau khi tập thể dục.
+                </div>
+
+                <!-- Glossary 1 -->
+                <table class="glossary-table">
+                    <thead>
+                        <tr>
+                            <th>Từ vựng</th>
+                            <th>Loại từ</th>
+                            <th>Nghĩa tiếng Việt</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>Subject</td><td>(n)</td><td>Môn học</td></tr>
+                        <tr><td>Pupil</td><td>(n)</td><td>Học sinh (tiểu học/trung học)</td></tr>
+                        <tr><td>Crayon</td><td>(n)</td><td>Bút màu sáp</td></tr>
+                        <tr><td>Ruler</td><td>(n)</td><td>Thước kẻ</td></tr>
+                        <tr><td>Favorite</td><td>(adj)</td><td>Yêu thích nhất</td></tr>
+                        <tr><td>Understand</td><td>(v)</td><td>Thấu hiểu, hiểu được</td></tr>
+                        <tr><td>Classmate</td><td>(n)</td><td>Bạn cùng lớp</td></tr>
+                        <tr><td>Trouble</td><td>(n)</td><td>Sự khó khăn, rắc rối</td></tr>
+                        <tr><td>Helpful</td><td>(adj)</td><td>Hay giúp đỡ, có ích</td></tr>
+                        <tr><td>Stay awake</td><td>(v)</td><td>Giữ tỉnh táo, không ngủ gật</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- PASSAGE 2 (For Ex 17 - Canteen, Fav Subject, New School) -->
+            <div class="exercise-section">
+                <div class="section-title">Bài Đọc 2: Advertisements & Announcements (Ex 17)</div>
+                <div class="passage-box">
+                    <strong>❶ Delicious School Lunch Awaits You!</strong><br>
+                    Come and enjoy tasty, healthy meals in our school canteen every day! 🍲 We are serving fresh vegetables, warm soups, yummy sandwiches, and sweet fruits. Our friendly staff are ready to help you. Eating a good lunch gives you energy to study and play. Don’t miss today’s special menu! Visit the canteen and have a wonderful meal with your friends!
+                </div>
+                <button class="btn-translate" onclick="toggleTranslation('trans17_1')">Mở dịch đoạn này 🌟</button>
+                <div class="translation-box" id="trans17_1">
+                    <strong>❶ Bữa trưa học đường thơm ngon đang chờ đón bạn!</strong><br>
+                    Hãy đến và thưởng thức những bữa ăn ngon lành, lành mạnh tại căn tinh trường học mỗi ngày! Chúng tôi đang phục vụ rau tươi, súp nóng, bánh mì kẹp ngon tuyệt và trái cây ngọt mát. Đội ngũ nhân viên thân thiện của chúng tôi đã sẵn sàng hỗ trợ bạn. Ăn một bữa trưa ngon miệng sẽ tiếp thêm năng lượng cho bạn học tập và vui chơi. Đừng bỏ lỡ thực đơn đặc biệt ngày hôm nay! Hãy ghé thăm căng tin và ăn một bữa thật tuyệt vời cùng bạn bè nhé!
+                </div>
+
+                <div class="passage-box" style="margin-top:20px;">
+                    <strong>❷ Let’s Talk About Your Favourite Subject!</strong><br>
+                    Do you love Math, Science, or English? 🌟 Every subject helps you learn new things and grow. When you study your favourite subject, you feel happy and excited. 😊 Share your favourite subject with your friends and teachers. Let’s have fun learning together and make every lesson special. Remember: learning is the key to your bright future! 🔑✨
+                </div>
+                <button class="btn-translate" onclick="toggleTranslation('trans17_2')">Mở dịch đoạn này 🌟</button>
+                <div class="translation-box" id="trans17_2">
+                    <strong>❷ Hãy cùng trò chuyện về môn học yêu thích của bạn!</strong><br>
+                    Bạn có yêu môn Toán, Khoa học, hay tiếng Anh không? Mỗi môn học đều giúp bạn học hỏi thêm nhiều điều mới và phát triển bản thân. Khi học môn học yêu thích, bạn sẽ cảm thấy hạnh phúc và hào hứng. Hãy chia sẻ môn học yêu thích của bạn với bạn bè và thầy cô nhé. Chúng ta hãy cùng học tập thật vui vẻ bên nhau và biến mỗi bài học trở nên đặc biệt. Hãy nhớ rằng: học tập chính là chìa khóa mở ra tương lai tươi sáng của bạn!
+                </div>
+
+                <div class="passage-box" style="margin-top:20px;">
+                    <strong>❸ Welcome to My New School!</strong><br>
+                    I am so happy to study at my new school! 🏫 The classrooms are bright and clean. The teachers are kind and helpful. I have made many new friends. 😊 There are fun activities like sports, music, and art. Every day is exciting and full of learning. 📚 I love my new school because it feels like home. Let’s enjoy this wonderful journey together! 🌟
+                </div>
+                <button class="btn-translate" onclick="toggleTranslation('trans17_3')">Mở dịch đoạn này 🌟</button>
+                <div class="translation-box" id="trans17_3">
+                    <strong>❸ Chào mừng đến với ngôi trường mới của tớ!</strong><br>
+                    Tớ rất hạnh phúc khi được học tập tại ngôi trường mới này! Các lớp học đều sáng sủa và sạch sẽ. Thầy cô giáo thì vô cùng tốt bụng và luôn giúp đỡ học sinh. Tớ đã kết giao được rất nhiều người bạn mới. Ở đây có các hoạt động vui chơi bổ ích như thể thao, âm nhạc và mỹ thuật. Mỗi ngày đến trường đều thật hào hứng và ngập tràn kiến thức. Tớ yêu ngôi trường mới của mình vì nơi đây đem lại cảm giác như ở nhà vậy. Hãy cùng nhau tận hưởng hành trình tuyệt vời này nhé!
+                </div>
+
+                <!-- Glossary 2 -->
+                <table class="glossary-table">
+                    <thead>
+                        <tr>
+                            <th>Từ vựng</th>
+                            <th>Loại từ</th>
+                            <th>Nghĩa tiếng Việt</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>Canteen</td><td>(n)</td><td>Nhà ăn, căng tin trường</td></tr>
+                        <tr><td>Serve</td><td>(v)</td><td>Phục vụ, cung cấp món ăn</td></tr>
+                        <tr><td>Staff</td><td>(n)</td><td>Đội ngũ nhân viên</td></tr>
+                        <tr><td>Energy</td><td>(n)</td><td>Năng lượng, sức lực</td></tr>
+                        <tr><td>Bright</td><td>(adj)</td><td>Sáng sủa, tươi sáng</td></tr>
+                        <tr><td>Excited</td><td>(adj)</td><td>Hào hứng, phấn khích</td></tr>
+                        <tr><td>Future</td><td>(n)</td><td>Tương lai</td></tr>
+                        <tr><td>Journey</td><td>(n)</td><td>Hành trình, chuyến đi</td></tr>
+                        <tr><td>Activity</td><td>(n)</td><td>Hoạt động</td></tr>
+                        <tr><td>Wonderful</td><td>(adj)</td><td>Tuyệt vời</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- PASSAGE 3 (Ex 18) -->
+            <div class="exercise-section">
+                <div class="section-title">Bài Đọc 3: Hobbies and School Stories (Ex 18)</div>
+                <div class="passage-box">
+                    <strong>❶ Nam & Vy's Story:</strong><br>
+                    Hi there, I’m Nam, I have a sister, Vy. We have different hobbies. I spend time with my family most evenings. At the weekends, I hang out with my friends at the park or in the playground in the local woods. If it rains, I like to go to see a film with my friends. My sister belongs to a chess clubs. The club meets twice a month, and once a year they go camping. They stay in tents on a lovely camp site and have picnics and barbecues. My sister is a friendly person. We get on well with each other.
+                </div>
+                <button class="btn-translate" onclick="toggleTranslation('trans18_1')">Mở dịch đoạn này 🌟</button>
+                <div class="translation-box" id="trans18_1">
+                    Xin chào, tớ là Nam, tớ có một người em gái tên là Vy. Chúng tớ có những sở thích khác nhau. Tớ dành phần lớn thời gian buổi tối với gia đình. Vào cuối tuần, tớ thường đi chơi với bạn bè ở công viên hoặc tại khu vui chơi trong khu rừng địa phương. Nếu trời mưa, tớ thích đi xem phim với các bạn của mình. Em gái tớ tham gia một câu lạc bộ cờ vua. Câu lạc bộ họp mặt hai lần một tháng, và mỗi năm một lần họ sẽ đi cắm trại. Họ ở trong những chiếc lều tại một địa điểm cắm trại tuyệt đẹp, tổ chức dã ngoại và tiệc nướng ngoài trời. Em gái tớ là một người rất thân thiện. Chúng tớ chung sống vô cùng hòa thuận với nhau.
+                </div>
+
+                <div class="passage-box" style="margin-top:20px;">
+                    <strong>❷ Shakespeare School in Birmingham:</strong><br>
+                    I am a grade 6 student at Shakespeare School in Birmingham. I often walk to school because I live nearby. I don’t wear a uniform only when I have physical education (P. E). Then I have to wear a white T- shirt with the school’s name, blue shorts and white socks. Besides English, I learn Spanish and German as foreign languages. My school is well- equipped. There is a laboratory to do experiments, a library to read books, a music room to play musical instruments, and a computer room to learn how to use a computer. There is also a large canteen where we can have lunch and a small snack bar to buy some drinks.
+                </div>
+                <button class="btn-translate" onclick="toggleTranslation('trans18_2')">Mở dịch đoạn này 🌟</button>
+                <div class="translation-box" id="trans18_2">
+                    Tớ là học sinh lớp 6 tại trường Shakespeare ở thành phố Birmingham. Tớ thường đi bộ đến trường vì tớ sống ở ngay gần đó. Tớ không mặc đồng phục chỉ khi tớ có tiết học thể dục (P.E). Vào lúc đó, tớ phải mặc một chiếc áo thun màu trắng có in tên trường, quần soóc xanh dương và đi tất trắng. Bên cạnh tiếng Anh, tớ học tiếng Tây Ban Nha và tiếng Đức như các ngôn ngữ nước ngoài. Ngôi trường của tớ được trang bị cơ sở vật chất vô cùng hiện đại. Có một phòng thí nghiệm để làm các thí nghiệm khoa học, một thư viện để đọc sách, một phòng âm nhạc để chơi các nhạc cụ và một phòng máy tính để học cách sử dụng máy vi tính. Ngoài ra còn có một căng tin lớn, nơi chúng tớ có thể ăn trưa và một quầy ăn vặt nhỏ để mua đồ uống.
+                </div>
+
+                <div class="passage-box" style="margin-top:20px;">
+                    <strong>❸ Suzy's School Rules:</strong><br>
+                    My name is Suzy. I come from China, but now I live in London with my sister and study in a secondary school there. It is far from my house, so it is very difficult to get there. At my new school, there are some rules I must follow: arrive at school on time; wear uniform; finish the homework before going to school; do not eat or drink in class and do not copy your friend’s test, either. I like my new school; the teachers are kind and helpful. The school building is large and modern. And I make some new friends in my classroom. And after school, I get the same orders at home. My mother keeps telling me: “get up, don’t be late, and make your bed”. Some things never change!
+                </div>
+                <button class="btn-translate" onclick="toggleTranslation('trans18_3')">Mở dịch đoạn này 🌟</button>
+                <div class="translation-box" id="trans18_3">
+                    Tên của tớ là Suzy. Tớ đến từ Trung Quốc, nhưng hiện tại tớ đang sống ở Luân Đôn cùng với chị gái và học tại một trường trung học ở đó. Trường học ở rất xa nhà tớ, vì vậy việc đến trường khá khó khăn. Tại ngôi trường mới của tớ, có một số nội quy nghiêm túc tớ bắt buộc phải tuân theo: đến trường đúng giờ; mặc đồng phục; hoàn thành bài tập về nhà trước khi đến trường; không ăn uống trong lớp học và cũng tuyệt đối không được chép bài kiểm tra của bạn. Tớ rất quý ngôi trường mới; các thầy cô giáo đều tốt bụng và luôn sẵn lòng giúp đỡ. Tòa nhà của trường rộng lớn và rất hiện đại. Và tớ đã kết bạn được với một số người bạn mới trong lớp. Sau giờ học, tớ cũng nhận được những mệnh lệnh tương tự khi ở nhà. Mẹ tớ liên tục bảo tớ: "dậy mau, không được muộn học, và phải tự gấp chăn mền". Một số điều thực sự chẳng bao giờ thay đổi cả!
+                </div>
+
+                <!-- Glossary 3 -->
+                <table class="glossary-table">
+                    <thead>
+                        <tr>
+                            <th>Từ vựng</th>
+                            <th>Loại từ</th>
+                            <th>Nghĩa tiếng Việt</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>Hang out</td><td>(v)</td><td>Đi chơi, tụ tập</td></tr>
+                        <tr><td>Belong to</td><td>(v)</td><td>Thuộc về, gia nhập nhóm</td></tr>
+                        <tr><td>Camp site</td><td>(n)</td><td>Địa điểm cắm trại</td></tr>
+                        <tr><td>Get on well</td><td>(v)</td><td>Hòa thuận với ai</td></tr>
+                        <tr><td>Uniform</td><td>(n)</td><td>Bộ đồng phục</td></tr>
+                        <tr><td>Well-equipped</td><td>(adj)</td><td>Được trang bị hiện đại</td></tr>
+                        <tr><td>Laboratory</td><td>(n)</td><td>Phòng thí nghiệm khoa học</td></tr>
+                        <tr><td>Experiment</td><td>(n/v)</td><td>Thí nghiệm</td></tr>
+                        <tr><td>Rule</td><td>(n)</td><td>Quy tắc, nội quy</td></tr>
+                        <tr><td>Modern</td><td>(adj)</td><td>Hiện đại, tân tiến</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- PASSAGE 4 (Ex 19) -->
+            <div class="exercise-section">
+                <div class="section-title">Bài Đọc 4: Email & Famous School (Ex 19)</div>
+                <div class="passage-box">
+                    <strong>❶ John's Email to Sam:</strong><br>
+                    Hi Sam,
+                    Just a quick email to say that sounds like a great idea. Saturday is better for me because I don’t have classes on Sunday. So if that’s still good for you, why don’t you come here? Then you can see our new flat. We can eat at home and then go for a walk in the afternoon. It’s going to be so good to catch up finally. I want to hear all about your new school!
+                    Our dress is 50 Hilton Road, but it’s a bit difficult to find because the house numbers are really strange here. If you turn left at the post office and keep going past the big white house on Charles Road, there’s a small side street behind it with the houses 50-56 in.
+                    Let me know if there’s anything you do/ don’t like to eat.
+                    See you soon!
+                    John
+                </div>
+                <button class="btn-translate" onclick="toggleTranslation('trans19_1')">Mở dịch đoạn này 🌟</button>
+                <div class="translation-box" id="trans19_1">
+                    Chào Sam,<br>
+                    Tớ viết email nhanh này để nói rằng ý kiến đó của cậu nghe thật tuyệt vời. Thứ Bảy sẽ tiện hơn cho tớ vì tớ không có tiết học vào Chủ Nhật. Nên nếu ngày đó vẫn ổn với cậu, tại sao cậu không đến chỗ tớ chơi nhỉ? Khi đó cậu có thể ngắm căn hộ mới của bọn tớ. Chúng ta có thể ăn trưa tại nhà và sau đó cùng đi dạo vào buổi chiều. Chắc chắn sẽ vô cùng tuyệt khi chúng ta cuối cùng cũng gặp nhau để hàn huyên tâm sự sau thời gian dài. Tớ rất muốn nghe kể mọi thứ về ngôi trường mới của cậu đấy!<br>
+                    Địa chỉ nhà tớ là số 50 đường Hilton Road, nhưng nó hơi khó tìm một chút vì số nhà ở đây được xếp rất kỳ lạ. Nếu cậu rẽ trái ở bưu điện và tiếp tục đi qua ngôi nhà lớn màu trắng trên đường Charles Road, sẽ có một con phố nhỏ ở phía sau, nơi có các ngôi nhà từ số 50 đến 56 nằm ở đó.<br>
+                    Báo cho tớ biết nếu có món nào cậu ăn được hoặc không thích ăn nhé.<br>
+                    Hẹn sớm gặp lại cậu!<br>
+                    John
+                </div>
+
+                <div class="passage-box" style="margin-top:20px;">
+                    <strong>❷ Eton College:</strong><br>
+                    Eton College is very famous private school near London. It is over 570 years old. There are about 1, 300 students and they all live in the school during the term. There aren’t any girls in this school- only boys. Most students stay here until they are 18 years old.
+                    This school is very expensive and it costs about 30,000 a year to study there. Most Eton students come from very wealthy families, for example, Prince William and Prince Harry!
+                    There are about 100 classrooms, lots of science labs, ICT rooms, music rooms, a concert hall, two theatres, a gym, two swimming pools, twenty tennis courts and an athletics track and a golf court. The school has 160 teachers. There is one teacher for 80 students.
+                </div>
+                <button class="btn-translate" onclick="toggleTranslation('trans19_2')">Mở dịch đoạn này 🌟</button>
+                <div class="translation-box" id="trans19_2">
+                    Trường Eton College là một ngôi trường tư thục danh tiếng cực kỳ nổi tiếng nằm ở gần Luân Đôn. Ngôi trường này đã có tuổi đời hơn 570 năm. Có khoảng 1.300 học sinh đang theo học và tất cả đều sinh hoạt, nội trú trong trường suốt học kỳ. Không có bất kỳ bạn nữ nào học ở trường này cả - đây là trường nam sinh 100%. Phần lớn học sinh theo học tại đây cho đến khi các em đủ 18 tuổi.<br>
+                    Học phí ở ngôi trường này vô cùng đắt đỏ, tiêu tốn khoảng 30.000 bảng Anh một năm để học tập tại đây. Hầu hết học sinh trường Eton đều xuất thân từ những gia đình tài phiệt cực kỳ giàu có, ví dụ như Hoàng tử William và Hoàng tử Harry!<br>
+                    Trường học có khoảng 100 phòng học, rất nhiều phòng thí nghiệm khoa học, phòng máy tính công nghệ (ICT), phòng âm nhạc, một phòng hòa nhạc, hai nhà hát kịch, một phòng tập thể dục, hai bể bơi, hai mươi sân quần vợt, một đường chạy điền kinh và một sân gôn. Toàn trường có 160 giáo viên. Tính trung bình có một giáo viên phụ trách lo cho 80 học sinh (tính theo phân hệ quản lý hành chính nội trú).
+                </div>
+
+                <div class="passage-box" style="margin-top:20px;">
+                    <strong>❸ Linda's Day:</strong><br>
+                    Linda is a musician. She's tall and beautiful. She works in a studio and a con-cert hall. She plays the piano. Every day she gets up at nine o'clock in the morning. She takes a shower and gets dressed. She drinks a cup of coffee and eats some toast. At ten o'clock, she takes a taxi to the studio. In the studio, she plays the piano. She writes new songs and makes CDs. At one o'clock, she goes to the restaurant. She eats lunch with her friends. At three o'clock, she goes to the studio again. She plays more music and sings. At six o'clock, she goes home and has dinner. She goes to the concert hall at eight o'clock. She plays her music for lots of people. They like her songs. She goes home at eleven o'clock. She is very tired and she goes to bed.
+                </div>
+                <button class="btn-translate" onclick="toggleTranslation('trans19_3')">Mở dịch đoạn này 🌟</button>
+                <div class="translation-box" id="trans19_3">
+                    Linda là một nữ nhạc sĩ chuyên nghiệp. Cô ấy có vóc dáng cao ráo và rất xinh đẹp. Cô làm việc trong một phòng thu thanh và một phòng hòa nhạc. Cô ấy chơi đàn dương cầm (piano). Mỗi ngày cô thức dậy vào lúc chín giờ sáng. Cô đi tắm và mặc quần áo. Cô uống một tách cà phê và ăn một ít bánh mì nướng. Vào lúc mười giờ, cô bắt xe taxi đến phòng thu. Tại phòng thu, cô chơi piano. Cô sáng tác những bài hát mới và thu âm đĩa CD. Lúc một giờ trưa, cô đến nhà hàng để ăn trưa cùng bạn bè. Vào lúc ba giờ chiều, cô lại quay trở lại phòng thu. Cô chơi nhạc nhiều hơn và hát. Lúc sáu giờ tối, cô về nhà nấu nướng và ăn tối. Cô đến phòng hòa nhạc lúc tám giờ tối để biểu diễn âm nhạc của mình cho hàng ngàn khán giả thưởng thức. Mọi người đều vô cùng yêu mến các bài hát của cô. Cô trở về nhà lúc mười một giờ đêm. Cô đã rất mệt mỏi và đi ngủ ngay lập tức.
+                </div>
+
+                <!-- Glossary 4 -->
+                <table class="glossary-table">
+                    <thead>
+                        <tr>
+                            <th>Từ vựng</th>
+                            <th>Loại từ</th>
+                            <th>Nghĩa tiếng Việt</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>Catch up</td><td>(v)</td><td>Gặp gỡ hàn huyên, cập nhật tin tức</td></tr>
+                        <tr><td>Flat</td><td>(n)</td><td>Căn hộ, chung cư</td></tr>
+                        <tr><td>Private school</td><td>(n)</td><td>Trường tư thục</td></tr>
+                        <tr><td>Expensive</td><td>(adj)</td><td>Đắt đỏ, tốn kém</td></tr>
+                        <tr><td>Wealthy</td><td>(adj)</td><td>Giàu có, phú quý</td></tr>
+                        <tr><td>Facility</td><td>(n)</td><td>Cơ sở vật chất, trang thiết bị</td></tr>
+                        <tr><td>Musician</td><td>(n)</td><td>Nhạc sĩ</td></tr>
+                        <tr><td>Studio</td><td>(n)</td><td>Phòng thu thanh, studio</td></tr>
+                        <tr><td>Concert hall</td><td>(n)</td><td>Phòng hòa nhạc lớn</td></tr>
+                        <tr><td>Tired / Exhausted</td><td>(adj)</td><td>Mệt mỏi / Kiệt sức</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
+
+        <!-- RIGHT SIDE: INTERACTIVE EXERCISES -->
+        <div class="split right-side" id="exercise-zone">
+            
+            <!-- EXERCISE 15 (True/False Blank Clicking) -->
+            <div class="exercise-section" id="ex15-card">
+                <div class="section-title">Exercise 15: True (T) or False (F)</div>
+                <p style="margin-bottom:15px; font-weight:bold; color:#6C5CE7;">💡 Mẹo: Hãy click trực tiếp vào dấu chấm lửng [.......] để kiểm tra đáp án Đúng/Sai ngay tại chỗ nha!</p>
+                
+                <div class="question-wrapper">
+                    <p class="question-text">1. Vernon goes to school all days of the week. <span class="inline-blank" data-ans="F" onclick="revealBlank(this, 'ex15_1')">[.......]</span></p>
+                    <div class="explanation-panel" id="ex15_1">
+                        <strong>Thạc sỹ giải thích chi tiết:</strong><br>
+                        • <strong>Dịch câu hỏi:</strong> Vernon đi học tất cả các ngày trong tuần.<br>
+                        • <strong>Dẫn chứng trong bài:</strong> Vế câu đầu tiên ghi rõ: <em>"Vernon goes to school from Monday to Friday."</em> (Vernon đi học từ thứ Hai đến thứ Sáu - tức là chỉ 5 ngày thôi).<br>
+                        • <strong>Tại sao chọn False?</strong> Vì bài đọc bảo đi học từ thứ Hai đến thứ Sáu, còn câu hỏi bảo đi học "all days" (tất cả các ngày - cả thứ 7, CN) -> Sai thông tin hoàn toàn!
+                    </div>
+                </div>
+
+                <div class="question-wrapper">
+                    <p class="question-text">2. In art class, he uses crayons, pencils and a ruler to draw. <span class="inline-blank" data-ans="T" onclick="revealBlank(this, 'ex15_2')">[.......]</span></p>
+                    <div class="explanation-panel" id="ex15_2">
+                        <strong>Thạc sỹ giải thích chi tiết:</strong><br>
+                        • <strong>Dịch câu hỏi:</strong> Trong giờ mỹ thuật, cậu ấy sử dụng bút màu sáp, bút chì và thước kẻ để vẽ.<br>
+                        • <strong>Dẫn chứng trong bài:</strong> Đoạn văn chỉ ra: <em>"He draws on paper with crayons and pencils and sometimes uses a ruler."</em><br>
+                        • <strong>Tại sao chọn True?</strong> Câu văn trùng khớp 100% với các dụng cụ được liệt kê trong bài học của Vernon.
+                    </div>
+                </div>
+
+                <div class="question-wrapper">
+                    <p class="question-text">3. Vernon doesn’t like to work with his friends in science class. <span class="inline-blank" data-ans="F" onclick="revealBlank(this, 'ex15_3')">[.......]</span></p>
+                    <div class="explanation-panel" id="ex15_3">
+                        <strong>Thạc sỹ giải thích chi tiết:</strong><br>
+                        • <strong>Dịch câu hỏi:</strong> Vernon không thích làm việc với bạn bè của mình trong lớp khoa học.<br>
+                        • <strong>Dẫn chứng trong bài:</strong> Bài đọc ghi: <em>"...but he gets to work with his classmates a lot, which he likes to do."</em><br>
+                        • <strong>Tại sao chọn False?</strong> Chữ "doesn't like" (không thích) ở câu hỏi ngược hoàn toàn với chữ "which he likes to do" (điều mà cậu ấy thích làm) trong bài đọc học đường.
+                    </div>
+                </div>
+
+                <div class="question-wrapper">
+                    <p class="question-text">4. It is hard for Wendy to get a good grade in math. <span class="inline-blank" data-ans="T" onclick="revealBlank(this, 'ex15_4')">[.......]</span></p>
+                    <div class="explanation-panel" id="ex15_4">
+                        <strong>Thạc sỹ giải thích chi tiết:</strong><br>
+                        • <strong>Dịch câu hỏi:</strong> Thật khó để Wendy đạt được điểm số cao môn toán.<br>
+                        • <strong>Dẫn chứng trong bài:</strong> Tác giả viết: <em>"Wendy has trouble getting a good grade in mathematics..."</em><br>
+                        • <strong>Tại sao chọn True?</strong> Cụm từ "has trouble" (gặp rắc rối/khó khăn) đồng nghĩa hoàn toàn với tính từ "hard" (khó khăn). Do đó thông tin này hoàn toàn chính xác.
+                    </div>
+                </div>
+
+                <div class="question-wrapper">
+                    <p class="question-text">5. Vernon thinks history is interesting. <span class="inline-blank" data-ans="F" onclick="revealBlank(this, 'ex15_5')">[.......]</span></p>
+                    <div class="explanation-panel" id="ex15_5">
+                        <strong>Thạc sỹ giải thích chi tiết:</strong><br>
+                        • <strong>Dịch câu hỏi:</strong> Vernon nghĩ môn lịch sử thú vị.<br>
+                        • <strong>Dẫn chứng trong bài:</strong> Câu cuối bài: <em>"Many lessons are boring, and he is very tired after doing gym."</em> (Nhiều bài học rất nhàm chán...)<br>
+                        • <strong>Tại sao chọn False?</strong> Từ trái nghĩa: Câu hỏi ghi "interesting" (thú vị) nhưng bài đọc ghi "boring" (nhàm chán). Thông tin sai lệch hoàn toàn so với suy nghĩ của Vernon!
+                    </div>
+                </div>
+            </div>
+
+            <!-- EXERCISE 16 (Multiple Choice Signs) -->
+            <div class="exercise-section" id="ex16-card">
+                <div class="section-title">Exercise 16: Look at the sign or the notice (ABCD)</div>
+                
+                <div class="question-wrapper" data-q="ex16_1">
+                    <p class="question-text">⚡ 1. What does a "Turn off lights when not in use" notice mean?</p>
+                    <div class="options-grid">
+                        <button class="option-btn" onclick="checkMCQ(this, false, 'ex16_1_exp')">A. You can use the lights here.</button>
+                        <button class="option-btn" onclick="checkMCQ(this, false, 'ex16_1_exp')">B. You can't use the lights here.</button>
+                        <button class="option-btn" data-correct="true" onclick="checkMCQ(this, true, 'ex16_1_exp')">C. Switch off the lights when you don't use them.</button>
+                        <button class="option-btn" onclick="checkMCQ(this, false, 'ex16_1_exp')">D. Turn on the lights when you don't use them.</button>
+                    </div>
+                    <div class="explanation-panel" id="ex16_1_exp">
+                        <strong>Thạc sỹ giải thích chi tiết:</strong><br>
+                        • <strong>Phân tích cụm từ đồng nghĩa:</strong> "Turn off" đồng nghĩa với "Switch off" (Tắt đèn). "When not in use" đồng nghĩa với "when you don't use them" (khi bạn không sử dụng chúng).<br>
+                        • <strong>Dịch nghĩa toàn câu chọn:</strong> C. Hãy tắt đèn khi bạn không sử dụng chúng.<br>
+                        • Loại D vì mang nghĩa ngược hoàn toàn (Turn on là bật đèn). Loại A, B không phản ánh đúng lời nhắc nhở tiết kiệm năng lượng điện.
+                    </div>
+                </div>
+
+                <div class="question-wrapper" data-q="ex16_2">
+                    <p class="question-text">🌹 2. What does a "No picking flowers" sign mean?</p>
+                    <div class="options-grid">
+                        <button class="option-btn" onclick="checkMCQ(this, false, 'ex16_2_exp')">A. You can pick flowers.</button>
+                        <button class="option-btn" data-correct="true" onclick="checkMCQ(this, true, 'ex16_2_exp')">B. Don't pick flowers.</button>
+                        <button class="option-btn" onclick="checkMCQ(this, false, 'ex16_2_exp')">C. There aren't any flowers here.</button>
+                        <button class="option-btn" onclick="checkMCQ(this, false, 'ex16_2_exp')">D. You can't plant flowers here.</button>
+                    </div>
+                    <div class="explanation-panel" id="ex16_2_exp">
+                        <strong>Thạc sỹ giải thích chi tiết:</strong><br>
+                        • <strong>Ngữ pháp cấm đoán:</strong> Biển báo bắt đầu bằng "No + V-ing" (No picking...) là biển cấm làm hành động đó. Nó cấu trúc tương đương với mệnh lệnh phủ định: "Don't + V-inf" (Don't pick...).<br>
+                        • <strong>Dịch nghĩa toàn câu chọn:</strong> B. Vui lòng không hái hoa.<br>
+                        • Loại A vì sai nghĩa (Cho phép hái). Loại C nói về số lượng hoa. Loại D nói về việc "plant" (trồng cây/hoa), không đúng với hành vi "pick" (hái hoa).
+                    </div>
+                </div>
+
+                <div class="question-wrapper" data-q="ex16_3">
+                    <p class="question-text">☕ 3. What does a "Café opens at 7 AM daily" notice mean?</p>
+                    <div class="options-grid">
+                        <button class="option-btn" onclick="checkMCQ(this, false, 'ex16_3_exp')">A. The café opens on 24th July.</button>
+                        <button class="option-btn" data-correct="true" onclick="checkMCQ(this, true, 'ex16_3_exp')">B. The café opens at 7 o'clock.</button>
+                        <button class="option-btn" onclick="checkMCQ(this, false, 'ex16_3_exp')">C. The café closes at 7 o'clock.</button>
+                        <button class="option-btn" onclick="checkMCQ(this, false, 'ex16_3_exp')">D. The café is always open.</button>
+                    </div>
+                    <div class="explanation-panel" id="ex16_3_exp">
+                        <strong>Thạc sỹ giải thích chi tiết:</strong><br>
+                        • <strong>Từ vựng cốt lõi:</strong> "Opens at 7 AM" có nghĩa rõ ràng là mở cửa vào lúc 7 giờ sáng.<br>
+                        • <strong>Dịch nghĩa toàn câu chọn:</strong> B. Quán cà phê mở cửa vào lúc 7 giờ.<br>
+                        • Loại C vì dùng sai động từ "closes" (đóng cửa). Loại A tự chế ra mốc ngày tháng 24/7 không có trong thông báo. Loại D sai vì mở lúc 7h không đồng nghĩa với "always open" (luôn luôn mở cửa 24/24).
+                    </div>
+                </div>
+
+                <div class="question-wrapper" data-q="ex16_4">
+                    <p class="question-text">🧼 4. What does a "Please wash your hands with soap" sign mean?</p>
+                    <div class="options-grid">
+                        <button class="option-btn" onclick="checkMCQ(this, false, 'ex16_4_exp')">A. You can use soap in this area.</button>
+                        <button class="option-btn" onclick="checkMCQ(this, false, 'ex16_4_exp')">B. Play with soap.</button>
+                        <button class="option-btn" data-correct="true" onclick="checkMCQ(this, true, 'ex16_4_exp')">C. Wash hands regularly.</button>
+                        <button class="option-btn" onclick="checkMCQ(this, false, 'ex16_4_exp')">D. Don't waste water.</button>
+                    </div>
+                    <div class="explanation-panel" id="ex16_4_exp">
+                        <strong>Thạc sỹ giải thích chi tiết:</strong><br>
+                        • <strong>Phân tích ngữ cảnh:</strong> Biển báo nhắc nhở rửa tay bằng xà phòng nhằm mục đích giữ gìn vệ sinh cá nhân một cách thường xuyên.<br>
+                        • <strong>Dịch nghĩa toàn câu chọn:</strong> C. Hãy rửa tay một cách thường xuyên, đều đặn.<br>
+                        • Loại B vì "Play with soap" mang nghĩa đùa nghịch với xà phòng (trẻ con). Loại D nhắc nhở tiết kiệm nước, không sát nghĩa bằng việc khuyến khích rửa tay sạch sẽ.
+                    </div>
+                </div>
+
+                <div class="question-wrapper" data-q="ex16_5">
+                    <p class="question-text">✈️ 5. What does the "ARRIVALS" sign at the airport mean?</p>
+                    <div class="options-grid">
+                        <button class="option-btn" onclick="checkMCQ(this, false, 'ex16_5_exp')">A. Departures</button>
+                        <button class="option-btn" data-correct="true" onclick="checkMCQ(this, true, 'ex16_5_exp')">B. Arrivals</button>
+                        <button class="option-btn" onclick="checkMCQ(this, false, 'ex16_5_exp')">C. Delays</button>
+                        <button class="option-btn" onclick="checkMCQ(this, false, 'ex16_5_exp')">D. You mustn't stop.</button>
+                    </div>
+                    <div class="explanation-panel" id="ex16_5_exp">
+                        <strong>Thạc sỹ giải thích chi tiết:</strong><br>
+                        • <strong>Từ vựng chuyên ngành sân bay:</strong> "Arrivals" bắt nguồn từ động từ "arrive" (đến nơi), nghĩa là khu vực Ga đến (nơi đón hành khách hạ cánh xuống phi trường).<br>
+                        • <strong>Tại sao chọn B?</strong> Bản thân câu hỏi hỏi ý nghĩa của biển báo này, và đáp án B chính là danh từ hiển thị trên bảng chỉ dẫn sân bay.<br>
+                        • Loại A vì "Departures" là Ga đi (nơi máy bay cất cánh). Loại C là hoãn chuyến bay.
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- EXERCISE 17 (Multiple Choice - Cloze Text) -->
+            <div class="exercise-section" id="ex17-card">
+                <div class="section-title">Exercise 17: Advertisement / Announcement Fill-in-Blanks</div>
+                
+                <h4 style="background:#747D8C; color:white; padding:5px 10px; border-radius:5px; margin:10px 0;">Đoạn văn ❶: School Lunch</h4>
+                <div class="question-wrapper" data-q="ex17_1">
+                    <p class="question-text">Blank (1)</p>
+                    <div class="options-grid">
+                        <button class="option-btn" data-correct="true" onclick="checkMCQ(this, true, 'ex17_1_exp')">A. enjoy</button>
+                        <button class="option-btn" onclick="checkMCQ(this, false, 'ex17_1_exp')">B. build</button>
+                        <button class="option-btn" onclick="checkMCQ(this, false, 'ex17_1_exp')">C. play</button>
+                        <button class="option-btn" onclick="checkMCQ(this, false, 'ex17_1_exp')">D. make</button>
+                    </div>
+                    <div class="explanation-panel" id="ex17_1_exp">
+                        <strong>Thạc sỹ giải thích chi tiết:</strong><br>
+                        • Cụm từ phù hợp ngữ cảnh đi với "tasty, healthy meals" (bữa ăn ngon, bổ dưỡng) phải là động từ <strong>enjoy (thưởng thức)</strong>.<br>
+                        • Loại B (build - xây dựng), C (play - chơi), D (make - làm, chế tạo) đều sai hoàn toàn về mặt kết hợp từ nghĩa với đồ ăn căng tin.
+                    </div>
+                </div>
+
+                <div class="question-wrapper" data-q="ex17_2">
+                    <p class="question-text">Blank (2)</p>
+                    <div class="options-grid">
+                        <button class="option-btn" onclick="checkMCQ(this, false, 'ex17_2_exp')">A. served</button>
+                        <button class="option-btn" onclick="checkMCQ(this, false, 'ex17_2_exp')">B. will serves</button>
+                        <button class="option-btn" onclick="checkMCQ(this, false, 'ex17_2_exp')">C. serves</button>
+                        <button class="option-btn" data-correct="true" onclick="checkMCQ(this, true, 'ex17_2_exp')">D. are serving</button>
+                    </div>
+                    <div class="explanation-panel" id="ex17_2_exp">
+                        <strong>Thạc sỹ giải thích chi tiết:</strong><br>
+                        • <strong>Ngữ pháp thì:</strong> Câu có trạng từ chỉ tần suất cuối câu là "every day", diễn tả hành động đang diễn ra đều đặn tại nhà ăn hiện tại. Chủ ngữ là "We" (Số nhiều) nên ta chia thì hiện tại tiếp diễn mang tính chất giới thiệu thực đơn hành động: <strong>are serving</strong>.<br>
+                        • Loại C vì "serves" thêm 's' chỉ dùng cho chủ ngữ số ít. Loại B sai cấu trúc ngữ pháp nghiêm trọng (sau will phải là V-nguyên thể, không thêm s).
+                    </div>
+                </div>
+
+                <div class="question-wrapper" data-q="ex17_3">
+                    <p class="question-text">Blank (3)</p>
+                    <div class="options-grid">
+                        <button class="option-btn" onclick="checkMCQ(this, false, 'ex17_3_exp')">A. to helping</button>
+                        <button class="option-btn" data-correct="true" onclick="checkMCQ(this, true, 'ex17_3_exp')">B. to help</button>
+                        <button class="option-btn" onclick="checkMCQ(this, false, 'ex17_3_exp')">C. helping</button>
+                        <button class="option-btn" onclick="checkMCQ(this, false, 'ex17_3_exp')">D. help</button>
+                    </div>
+                    <div class="explanation-panel" id="ex17_3_exp">
+                        <strong>Thạc sỹ giải thích chi tiết:</strong><br>
+                        • <strong>Cấu trúc tính từ:</strong> Cấu trúc kinh điển trong tiếng Anh: <code>be + ready + to + V-inf</code> (Sẵn sàng làm việc gì đó).<br>
+                        • Do đó, sau cụm "ready" ta bắt buộc phải chọn động từ nguyên mẫu có 'to' là <strong>to help</strong>. Tất cả các phương án còn lại đều sai cấu trúc ngữ pháp.
+                    </div>
+                </div>
+
+                <div class="question-wrapper" data-q="ex17_4">
+                    <p class="question-text">Blank (4)</p>
+                    <div class="options-grid">
+                        <button class="option-btn" onclick="checkMCQ(this, false, 'ex17_4_exp')">A. judo</button>
+                        <button class="option-btn" onclick="checkMCQ(this, false, 'ex17_4_exp')">B. projector</button>
+                        <button class="option-btn" onclick="checkMCQ(this, false, 'ex17_4_exp')">C. map</button>
+                        <button class="option-btn" data-correct="true" onclick="checkMCQ(this, true, 'ex17_4_exp')">D. energy</button>
+                    </div>
+                    <div class="explanation-panel" id="ex17_4_exp">
+                        <strong>Thạc sỹ giải thích chi tiết:</strong><br>
+                        • <strong>Dịch nghĩa từ vựng:</strong> "gives you _____ to study and play" (Cung cấp cho bạn... để học tập và vui chơi). Bữa trưa đầy đủ dinh dưỡng sẽ mang lại <strong>energy (năng lượng)</strong>.<br>
+                        • Loại các từ không liên quan: judo (môn võ), projector (máy chiếu), map (bản đồ).
+                    </div>
+                </div>
+
+                <h4 style="background:#747D8C; color:white; padding:5px 10px; border-radius:5px; margin:10px 0;">Đoạn văn ❷: Favourite Subject</h4>
+                <div class="question-wrapper" data-q="ex17_5">
+                    <p class="question-text">Blank (1)</p>
+                    <div class="options-grid">
+                        <button class="option-btn" onclick="checkMCQ(this, false, 'ex17_5_exp')">A. computer</button>
+                        <button class="option-btn" data-correct="true" onclick="checkMCQ(this, true, 'ex17_5_exp')">B. subject</button>
+                        <button class="option-btn" onclick="checkMCQ(this, false, 'ex17_5_exp')">C. exercise</button>
+                        <button class="option-btn" onclick="checkMCQ(this, false, 'ex17_5_exp')">D. globe</button>
+                    </div>
+                    <div class="explanation-panel" id="ex17_5_exp">
+                        <strong>Thạc sỹ giải thích chi tiết:</strong><br>
+                        • Tiêu đề đoạn văn là "Favourite Subject" và vế trước liệt kê "Math, Science, or English" -> Đây đều là các môn học. Vì vậy từ thích hợp đi sau "Every" là <strong>subject</strong>.<br>
+                        • Loại A (máy tính), C (bài tập), D (quả địa cầu).
+                    </div>
+                </div>
+
+                <div class="question-wrapper" data-q="ex17_6">
+                    <p class="question-text">Blank (2)</p>
+                    <div class="options-grid">
+                        <button class="option-btn" onclick="checkMCQ(this, false, 'ex17_6_exp')">A. disappointed</button>
+                        <button class="option-btn" onclick="checkMCQ(this, false, 'ex17_6_exp')">B. tired</button>
+                        <button class="option-btn" onclick="checkMCQ(this, false, 'ex17_6_exp')">C. bad</button>
+                        <button class="option-btn" data-correct="true" onclick="checkMCQ(this, true, 'ex17_6_exp')">D. excited</button>
+                    </div>
+                    <div class="explanation-panel" id="ex17_6_exp">
+                        <strong>Thạc sỹ giải thích chi tiết:</strong><br>
+                        • <strong>Tính từ đồng đẳng:</strong> Từ nối "and" kết nối các từ cùng sắc thái ý nghĩa tích cực. Vế trước dùng "happy" (hạnh phúc) thì từ phía sau phải mang nghĩa tích cực là <strong>excited (hào hứng)</strong>.<br>
+                        • Loại A (thất vọng), B (mệt mỏi), C (tồi tệ) vì mang nghĩa tiêu cực.
+                    </div>
+                </div>
+
+                <div class="question-wrapper" data-q="ex17_7">
+                    <p class="question-text">Blank (3)</p>
+                    <div class="options-grid">
+                        <button class="option-btn" onclick="checkMCQ(this, false, 'ex17_7_exp')">A. to</button>
+                        <button class="option-btn" onclick="checkMCQ(this, false, 'ex17_7_exp')">B. at</button>
+                        <button class="option-btn" data-correct="true" onclick="checkMCQ(this, true, 'ex17_7_exp')">C. with</button>
+                        <button class="option-btn" onclick="checkMCQ(this, false, 'ex17_7_exp')">D. on</button>
+                    </div>
+                    <div class="explanation-panel" id="ex17_7_exp">
+                        <strong>Thạc sỹ giải thích chi tiết:</strong><br>
+                        • <strong>Cấu trúc giới từ:</strong> Ta có cấu trúc đi với động từ Share: <code>Share something WITH someone</code> (Chia sẻ điều gì đó VỚI ai đó). Do vậy giới từ cần điền là <strong>with</strong>.
+                    </div>
+                </div>
+
+                <div class="question-wrapper" data-q="ex17_8">
+                    <p class="question-text">Blank (4)</p>
+                    <div class="options-grid">
+                        <button class="option-btn" onclick="checkMCQ(this, false, 'ex17_8_exp')">A. be</button>
+                        <button class="option-btn" onclick="checkMCQ(this, false, 'ex17_8_exp')">B. am</button>
+                        <button class="option-btn" onclick="checkMCQ(this, false, 'ex17_8_exp')">C. will be</button>
+                        <button class="option-btn" data-correct="true" onclick="checkMCQ(this, true, 'ex17_8_exp')">D. is</button>
+                    </div>
+                    <div class="explanation-panel" id="ex17_8_exp">
+                        <strong>Thạc sỹ giải thích chi tiết:</strong><br>
+                        • <strong>Chia động từ To-be:</strong> Danh động từ "learning" đóng vai trò làm chủ ngữ số ít trong câu định nghĩa chân lý hiện tại -> động từ To-be đi kèm bắt buộc là <strong>is</strong>.
+                    </div>
+                </div>
+
+                <h4 style="background:#747D8C; color:white; padding:5px 10px; border-radius:5px; margin:10px 0;">Đoạn văn ❸: New School</h4>
+                <div class="question-wrapper" data-q="ex17_9">
+                    <p class="question-text">Blank (1)</p>
+                    <div class="options-grid">
+                        <button class="option-btn" onclick="checkMCQ(this, false, 'ex17_9_exp')">A. study</button>
+                        <button class="option-btn" data-correct="true" onclick="checkMCQ(this, true, 'ex17_9_exp')">B. to study</button>
+                        <button class="option-btn" onclick="checkMCQ(this, false, 'ex17_9_exp')">C. studying</button>
+                        <button class="option-btn" onclick="checkMCQ(this, false, 'ex17_9_exp')">D. to studying</button>
+                    </div>
+                    <div class="explanation-panel" id="ex17_9_exp">
+                        <strong>Thạc sỹ giải thích chi tiết:</strong><br>
+                        • <strong>Cấu trúc cảm xúc:</strong> Công thức chỉ cảm xúc cá nhân: <code>S + be + happy/glad/sad + to + V-inf</code> (Hạnh phúc khi làm gì). Nên đáp án chuẩn ngữ pháp là <strong>to study</strong>.
+                    </div>
+                </div>
+
+                <div class="question-wrapper" data-q="ex17_10">
+                    <p class="question-text">Blank (2)</p>
+                    <div class="options-grid">
+                        <button class="option-btn" onclick="checkMCQ(this, false, 'ex17_10_exp')">A. few</button>
+                        <button class="option-btn" data-correct="true" onclick="checkMCQ(this, true, 'ex17_10_exp')">B. many</button>
+                        <button class="option-btn" onclick="checkMCQ(this, false, 'ex17_10_exp')">C. much</button>
+                        <button class="option-btn" onclick="checkMCQ(this, false, 'ex17_10_exp')">D. any</button>
+                    </div>
+                    <div class="explanation-panel" id="ex17_10_exp">
+                        <strong>Thạc sỹ giải thích chi tiết:</strong><br>
+                        • "new friends" là danh từ đếm được số nhiều. Theo ngữ cảnh vui tươi của bài, bạn ấy phải kết giao được <strong>many (nhiều)</strong> bạn mới.<br>
+                        • Loại C vì "much" đi với danh từ không đếm được. Loại A "few" mang nghĩa tiêu cực (quá ít, hầu như không có).
+                    </div>
+                </div>
+
+                <div class="question-wrapper" data-q="ex17_11">
+                    <p class="question-text">Blank (3)</p>
+                    <div class="options-grid">
+                        <button class="option-btn" onclick="checkMCQ(this, false, 'ex17_11_exp')">A. desks</button>
+                        <button class="option-btn" onclick="checkMCQ(this, false, 'ex17_11_exp')">B. glues</button>
+                        <button class="option-btn" data-correct="true" onclick="checkMCQ(this, true, 'ex17_11_exp')">A. activities</button>
+                        <button class="option-btn" onclick="checkMCQ(this, false, 'ex17_11_exp')">D. lessons</button>
+                    </div>
+                    <div class="explanation-panel" id="ex17_11_exp">
+                        <strong>Thạc sỹ giải thích chi tiết:</strong><br>
+                        • Vế sau liệt kê "sports, music, and art" -> đây được xem là các hoạt động giải trí, thể chất ngoại khóa, gọi là <strong>activities</strong>.<br>
+                        • Loại A (bàn học), B (keo dán), D (bài học).
+                    </div>
+                </div>
+
+                <div class="question-wrapper" data-q="ex17_12">
+                    <p class="question-text">Blank (4)</p>
+                    <div class="options-grid">
+                        <button class="option-btn" onclick="checkMCQ(this, false, 'ex17_12_exp')">A. about</button>
+                        <button class="option-btn" onclick="checkMCQ(this, false, 'ex17_12_exp')">B. with</button>
+                        <button class="option-btn" data-correct="true" onclick="checkMCQ(this, true, 'ex17_12_exp')">C. of</button>
+                        <button class="option-btn" onclick="checkMCQ(this, false, 'ex17_12_exp')">D. for</button>
+                    </div>
+                    <div class="explanation-panel" id="ex17_12_exp">
+                        <strong>Thạc sỹ giải thích chi tiết:</strong><br>
+                        • <strong>Cụm từ đi kèm tính từ:</strong> Cụm từ cố định chỉ sự tràn đầy, chứa đầy cái gì đó: <code>be full OF something</code>. Do đó ta điền giới từ <strong>of</strong>.
+                    </div>
+                </div>
+            </div>
+
+            <!-- EXERCISE 18 (Multiple Choice - Cloze Text 2) -->
+            <div class="exercise-section" id="ex18-card">
+                <div class="section-title">Exercise 18: Multiple Choice Cloze (Text 1-3)</div>
+                
+                <h4 style="background:#6C5CE7; color:white; padding:5px 10px; border-radius:5px; margin:10px 0;">Đoạn văn ❶: Nam & Vy</h4>
+                <div class="question-wrapper" data-q="ex18_1">
+                    <p class="question-text">1. spend time _____ my family</p>
+                    <div class="options-grid">
+                        <button class="option-btn" data-correct="true" onclick="checkMCQ(this, true, 'ex18_1_exp')">A. with</button>
+                        <button class="option-btn" onclick="checkMCQ(this, false, 'ex18_1_exp')">B. to</button>
+                        <button class="option-btn" onclick="checkMCQ(this, false, 'ex18_1_exp')">C. of</button>
+                        <button class="option-btn" onclick="checkMCQ(this, false, 'ex18_1_exp')">D. in</button>
+                    </div>
+                    <div class="explanation-panel" id="ex18_1_exp">
+                        <strong>Thạc sỹ giải thích chi tiết:</strong><br>
+                        • Cấu trúc: <code>Spend time WITH someone</code> nghĩa là dành thời gian VỚI ai đó. Chọn <strong>with</strong>.
+                    </div>
+                </div>
+
+                <div class="question-wrapper" data-q="ex18_2">
+                    <p class="question-text">2. At _____ weekends</p>
+                    <div class="options-grid">
+                        <button class="option-btn" onclick="checkMCQ(this, false, 'ex18_2_exp')">A. a</button>
+                        <button class="option-btn" onclick="checkMCQ(this, false, 'ex18_2_exp')">B. the</button>
+                        <button class="option-btn" onclick="checkMCQ(this, false, 'ex18_2_exp')">C. an</button>
+                        <button class="option-btn" data-correct="true" onclick="checkMCQ(this, true, 'ex18_2_exp')">D. no article.</button>
+                    </div>
+                    <div class="explanation-panel" id="ex18_2_exp">
+                        <strong>Thạc sỹ giải thích chi tiết:</strong><br>
+                        • Cụm từ cố định trong tiếng Anh: "at weekends" hoặc "at the weekend" (không dùng 'the' khi có chữ s số nhiều phía sau). Phương án chuẩn đề bài gốc là <strong>no article</strong> (không điền mạo từ).
+                    </div>
+                </div>
+
+                <div class="question-wrapper" data-q="ex18_3">
+                    <p class="question-text">3. at the park _____ in the playground</p>
+                    <div class="options-grid">
+                        <button class="option-btn" onclick="checkMCQ(this, false, 'ex18_3_exp')">A. and</button>
+                        <button class="option-btn" data-correct="true" onclick="checkMCQ(this, true, 'ex18_3_exp')">B. or</button>
+                        <button class="option-btn" onclick="checkMCQ(this, false, 'ex18_3_exp')">C. but</button>
+                        <button class="option-btn" onclick="checkMCQ(this, false, 'ex18_3_exp')">D. so</button>
+                    </div>
+                    <div class="explanation-panel" id="ex18_3_exp">
+                        <strong>Thạc sỹ giải thích chi tiết:</strong><br>
+                        • Từ nối chỉ sự lựa chọn địa điểm vui chơi cuối tuần: ở công viên HOẶC ở sân chơi -> Chọn liên từ mang tính chất lựa chọn là <strong>or</strong>.
+                    </div>
+                </div>
+
+                <div class="question-wrapper" data-q="ex18_4">
+                    <p class="question-text">4. go to _____ a film</p>
+                    <div class="options-grid">
+                        <button class="option-btn" onclick="checkMCQ(this, false, 'ex18_4_exp')">A. learn</button>
+                        <button class="option-btn" onclick="checkMCQ(this, false, 'ex18_4_exp')">B. play</button>
+                        <button class="option-btn" onclick="checkMCQ(this, false, 'ex18_4_exp')">C. do</button>
+                        <button class="option-btn" data-correct="true" onclick="checkMCQ(this, true, 'ex18_4_exp')">D. see</button>
+                    </div>
+                    <div class="explanation-panel" id="ex18_4_exp">
+                        <strong>Thạc sỹ giải thích chi tiết:</strong><br>
+                        • Điểm kết hợp từ vựng tự nhiên (Collocation): <code>see a film / see a movie</code> nghĩa là xem một bộ phim. Do vậy chọn động từ <strong>see</strong>.
+                    </div>
+                </div>
+
+                <div class="question-wrapper" data-q="ex18_5">
+                    <p class="question-text">5. once a year they go _____</p>
+                    <div class="options-grid">
+                        <button class="option-btn" onclick="checkMCQ(this, false, 'ex18_5_exp')">A. camp</button>
+                        <button class="option-btn" onclick="checkMCQ(this, false, 'ex18_5_exp')">B. to camp</button>
+                        <button class="option-btn" data-correct="true" onclick="checkMCQ(this, true, 'ex18_5_exp')">C. camping</button>
+                        <button class="option-btn" onclick="checkMCQ(this, false, 'ex18_5_exp')">D. camps</button>
+                    </div>
+                    <div class="explanation-panel" id="ex18_5_exp">
+                        <strong>Thạc sỹ giải thích chi tiết:</strong><br>
+                        • Cấu trúc đi chơi dã ngoại, giải trí: <code>go + V-ing</code> (go shopping, go swimming, go camping). Chọn danh động từ <strong>camping</strong> (đi cắm trại).
+                    </div>
+                </div>
+
+                <div class="question-wrapper" data-q="ex18_6">
+                    <p class="question-text">6. stay in tents on a _____</p>
+                    <div class="options-grid">
+                        <button class="option-btn" data-correct="true" onclick="checkMCQ(this, true, 'ex18_6_exp')">A. lovely camp site</button>
+                        <button class="option-btn" onclick="checkMCQ(this, false, 'ex18_6_exp')">B. lovely site camp</button>
+                        <button class="option-btn" onclick="checkMCQ(this, false, 'ex18_6_exp')">C. camp lovely site</button>
+                        <button class="option-btn" onclick="checkMCQ(this, false, 'ex18_6_exp')">D. site lovely camp.</button>
+                    </div>
+                    <div class="explanation-panel" id="ex18_6_exp">
+                        <strong>Thạc sỹ giải thích chi tiết:</strong><br>
+                        • Trật tự từ trong tiếng Anh: <code>Tính từ (lovely) + Danh từ ghép (camp site - địa điểm cắm trại)</code>. Do vậy cấu trúc đúng ngữ pháp nhất là <strong>lovely camp site</strong>.
+                    </div>
+                </div>
+
+                <h4 style="background:#6C5CE7; color:white; padding:5px 10px; border-radius:5px; margin:10px 0;">Đoạn văn ❷: Shakespeare School</h4>
+                <div class="question-wrapper" data-q="ex18_7">
+                    <p class="question-text">1. walk to school _____ I live nearby</p>
+                    <div class="options-grid">
+                        <button class="option-btn" data-correct="true" onclick="checkMCQ(this, true, 'ex18_7_exp')">A. because</button>
+                        <button class="option-btn" onclick="checkMCQ(this, false, 'ex18_7_exp')">B. so</button>
+                        <button class="option-btn" onclick="checkMCQ(this, false, 'ex18_7_exp')">C. when</button>
+                        <button class="option-btn" onclick="checkMCQ(this, false, 'ex18_7_exp')">D. before</button>
+                    </div>
+                    <div class="explanation-panel" id="ex18_7_exp">
+                        <strong>Thạc sỹ giải thích chi tiết:</strong><br>
+                        • Mối quan hệ nguyên nhân - kết quả: Tôi đi bộ đi học [kết quả] vì tôi sống ở ngay gần đó [nguyên nhân]. Chọn liên từ chỉ lý do là <strong>because</strong>.
+                    </div>
+                </div>
+
+                <div class="question-wrapper" data-q="ex18_8">
+                    <p class="question-text">2. I don’t wear a _____</p>
+                    <div class="options-grid">
+                        <button class="option-btn" onclick="checkMCQ(this, false, 'ex18_8_exp')">A. hat</button>
+                        <button class="option-btn" data-correct="true" onclick="checkMCQ(this, true, 'ex18_8_exp')">B. uniform</button>
+                        <button class="option-btn" onclick="checkMCQ(this, false, 'ex18_8_exp')">C. jacket</button>
+                        <button class="option-btn" onclick="checkMCQ(this, false, 'ex18_8_exp')">D. dress</button>
+                    </div>
+                    <div class="explanation-panel" id="ex18_8_exp">
+                        <strong>Thạc sỹ giải thích chi tiết:</strong><br>
+                        • Dựa vào vế sau giải thích trang phục thay thế khi học môn P.E (áo thun in tên trường, quần đùi...) -> Đây là việc mặc <strong>uniform (đồng phục)</strong> hàng ngày của trường học.
+                    </div>
+                </div>
+
+                <div class="question-wrapper" data-q="ex18_9">
+                    <p class="question-text">3. Then I have to _____ a white T-shirt</p>
+                    <div class="options-grid">
+                        <button class="option-btn" data-correct="true" onclick="checkMCQ(this, true, 'ex18_9_exp')">A. wear</button>
+                        <button class="option-btn" onclick="checkMCQ(this, false, 'ex18_9_exp')">B. to wear</button>
+                        <button class="option-btn" onclick="checkMCQ(this, false, 'ex18_9_exp')">C. wearing</button>
+                        <button class="option-btn" onclick="checkMCQ(this, false, 'ex18_9_exp')">D. to wearing</button>
+                    </div>
+                    <div class="explanation-panel" id="ex18_9_exp">
+                        <strong>Thạc sỹ giải thích chi tiết:</strong><br>
+                        • Cấu trúc động từ khuyết thiếu bắt buộc: <code>have to + V-nguyên mẫu</code> (phải làm gì). Vì chữ 'to' đã có sẵn ở chữ "have to", chỗ trống cần động từ nguyên thể không to: <strong>wear</strong>.
+                    </div>
+                </div>
+
+                <div class="question-wrapper" data-q="ex18_10">
+                    <p class="question-text">4. There _____ a laboratory</p>
+                    <div class="options-grid">
+                        <button class="option-btn" onclick="checkMCQ(this, false, 'ex18_10_exp')">A. are</button>
+                        <button class="option-btn" data-correct="true" onclick="checkMCQ(this, true, 'ex18_10_exp')">B. is</button>
+                        <button class="option-btn" onclick="checkMCQ(this, false, 'ex18_10_exp')">C. has</button>
+                        <button class="option-btn" onclick="checkMCQ(this, false, 'ex18_10_exp')">D. have</button>
+                    </div>
+                    <div class="explanation-panel" id="ex18_10_exp">
+                        <strong>Thạc sỹ giải thích chi tiết:</strong><br>
+                        • Cấu trúc tồn tại: "There + be + Danh từ". Vì "a laboratory" là danh từ số ít (một phòng thí nghiệm) nên ta dùng động từ To-be số ít là <strong>is</strong>.
+                    </div>
+                </div>
+
+                <div class="question-wrapper" data-q="ex18_11">
+                    <p class="question-text">5. a music room to _____ musical instruments</p>
+                    <div class="options-grid">
+                        <button class="option-btn" onclick="checkMCQ(this, false, 'ex18_11_exp')">A. do</button>
+                        <button class="option-btn" onclick="checkMCQ(this, false, 'ex18_11_exp')">B. have</button>
+                        <button class="option-btn" data-correct="true" onclick="checkMCQ(this, true, 'ex18_11_exp')">C. play</button>
+                        <button class="option-btn" onclick="checkMCQ(this, false, 'ex18_11_exp')">D. take</button>
+                    </div>
+                    <div class="explanation-panel" id="ex18_11_exp">
+                        <strong>Thạc sỹ giải thích chi tiết:</strong><br>
+                        • Động từ đi kèm với nhạc cụ (musical instruments) luôn luôn là <strong>play</strong> (chơi nhạc cụ).
+                    </div>
+                </div>
+
+                <div class="question-wrapper" data-q="ex18_12">
+                    <p class="question-text">6. there is also a large _____ where we can have lunch</p>
+                    <div class="options-grid">
+                        <button class="option-btn" data-correct="true" onclick="checkMCQ(this, true, 'ex18_12_exp')">A. canteen</button>
+                        <button class="option-btn" onclick="checkMCQ(this, false, 'ex18_12_exp')">B. theatre</button>
+                        <button class="option-btn" onclick="checkMCQ(this, false, 'ex18_12_exp')">C. schoolyard</button>
+                        <button class="option-btn" onclick="checkMCQ(this, false, 'ex18_12_exp')">D. garden</button>
+                    </div>
+                    <div class="explanation-panel" id="ex18_12_exp">
+                        <strong>Thạc sỹ giải thích chi tiết:</strong><br>
+                        • Địa điểm tại trường học để ăn trưa (have lunch) là phòng ăn căng tin, từ vựng chuẩn xác là <strong>canteen</strong>.
+                    </div>
+                </div>
+
+                <h4 style="background:#6C5CE7; color:white; padding:5px 10px; border-radius:5px; margin:10px 0;">Đoạn văn ❸: Suzy</h4>
+                <div class="question-wrapper" data-q="ex18_13">
+                    <p class="question-text">1. but now I _____ in London</p>
+                    <div class="options-grid">
+                        <button class="option-btn" data-correct="true" onclick="checkMCQ(this, true, 'ex18_13_exp')">A. live</button>
+                        <button class="option-btn" onclick="checkMCQ(this, false, 'ex18_13_exp')">B. lived</button>
+                        <button class="option-btn" onclick="checkMCQ(this, false, 'ex18_13_exp')">C. will live</button>
+                        <button class="option-btn" onclick="checkMCQ(this, false, 'ex18_13_exp')">D. lives</button>
+                    </div>
+                    <div class="explanation-panel" id="ex18_13_exp">
+                        <strong>Thạc sỹ giải thích chi tiết:</strong><br>
+                        • Câu chứa trạng từ "now" (bây giờ), diễn tả tình trạng hiện tại. Chủ ngữ là ngôi thứ nhất "I" nên động từ giữ nguyên ở hiện tại đơn là <strong>live</strong>.
+                    </div>
+                </div>
+
+                <div class="question-wrapper" data-q="ex18_14">
+                    <p class="question-text">2. there are some _____ I must follow</p>
+                    <div class="options-grid">
+                        <button class="option-btn" onclick="checkMCQ(this, false, 'ex18_14_exp')">A. rubbers</button>
+                        <button class="option-btn" onclick="checkMCQ(this, false, 'ex18_14_exp')">B. paper clips</button>
+                        <button class="option-btn" data-correct="true" onclick="checkMCQ(this, true, 'ex18_14_exp')">C. rules</button>
+                        <button class="option-btn" onclick="checkMCQ(this, false, 'ex18_14_exp')">D. bins</button>
+                    </div>
+                    <div class="explanation-panel" id="ex18_14_exp">
+                        <strong>Thạc sỹ giải thích chi tiết:</strong><br>
+                        • Các hành động liệt kê phía sau như đi học đúng giờ, mặc đồng phục, làm bài tập... là các <strong>rules (nội quy/quy định trường học)</strong>.<br>
+                        • Loại các từ văn phòng phẩm không liên quan: rubbers (cục tẩy), paper clips (kẹp giấy).
+                    </div>
+                </div>
+
+                <div class="question-wrapper" data-q="ex18_15">
+                    <p class="question-text">3. arrive at school _____ time</p>
+                    <div class="options-grid">
+                        <button class="option-btn" onclick="checkMCQ(this, false, 'ex18_15_exp')">A. in</button>
+                        <button class="option-btn" onclick="checkMCQ(this, false, 'ex18_15_exp')">B. at</button>
+                        <button class="option-btn" data-correct="true" onclick="checkMCQ(this, true, 'ex18_15_exp')">C. on</button>
+                        <button class="option-btn" onclick="checkMCQ(this, false, 'ex18_15_exp')">D. to</button>
+                    </div>
+                    <div class="explanation-panel" id="ex18_15_exp">
+                        <strong>Thạc sỹ giải thích chi tiết:</strong><br>
+                        • Thành ngữ chỉ việc đến đúng giờ theo lịch trình quy định là <code>on time</code>. Chọn giới từ <strong>on</strong>.
+                    </div>
+                </div>
+
+                <div class="question-wrapper" data-q="ex18_16">
+                    <p class="question-text">4. finish the homework _____ going to school</p>
+                    <div class="options-grid">
+                        <button class="option-btn" data-correct="true" onclick="checkMCQ(this, true, 'ex18_16_exp')">A. before</button>
+                        <button class="option-btn" onclick="checkMCQ(this, false, 'ex18_16_exp')">B. after</button>
+                        <button class="option-btn" onclick="checkMCQ(this, false, 'ex18_16_exp')">C. when</button>
+                        <button class="option-btn" onclick="checkMCQ(this, false, 'ex18_16_exp')">D. while</button>
+                    </div>
+                    <div class="explanation-panel" id="ex18_16_exp">
+                        <strong>Thạc sỹ giải thích chi tiết:</strong><br>
+                        • Theo logic học tập thông thường, học sinh bắt buộc phải hoàn thành bài tập về nhà <strong>before (trước khi)</strong> đến lớp.
+                    </div>
+                </div>
+
+                <div class="question-wrapper" data-q="ex18_17">
+                    <p class="question-text">5. the teachers are kind and ______</p>
+                    <div class="options-grid">
+                        <button class="option-btn" onclick="checkMCQ(this, false, 'ex18_17_exp')">A. interesting</button>
+                        <button class="option-btn" onclick="checkMCQ(this, false, 'ex18_17_exp')">B. unfriendly</button>
+                        <button class="option-btn" onclick="checkMCQ(this, false, 'ex18_17_exp')">C. mean</button>
+                        <button class="option-btn" data-correct="true" onclick="checkMCQ(this, true, 'ex18_17_exp')">D. helpful</button>
+                    </div>
+                    <div class="explanation-panel" id="ex18_17_exp">
+                        <strong>Thạc sỹ giải thích chi tiết:</strong><br>
+                        • Đi cùng tính từ tích cực khen ngợi thầy cô "kind" (tốt bụng), từ hợp lý tiếp theo là <strong>helpful (luôn giúp đỡ học sinh)</strong>.<br>
+                        • Loại unfriendly (không thân thiện), mean (keo kiệt/xấu tính) do mang nghĩa tiêu cực.
+                    </div>
+                </div>
+
+                <div class="question-wrapper" data-q="ex18_18">
+                    <p class="question-text">6. And I _____ some new friends</p>
+                    <div class="options-grid">
+                        <button class="option-btn" onclick="checkMCQ(this, false, 'ex18_18_exp')">A. do</button>
+                        <button class="option-btn" onclick="checkMCQ(this, false, 'ex18_18_exp')">B. play</button>
+                        <button class="option-btn" data-correct="true" onclick="checkMCQ(this, true, 'ex18_18_exp')">C. make</button>
+                        <button class="option-btn" onclick="checkMCQ(this, false, 'ex18_18_exp')">D. study</button>
+                    </div>
+                    <div class="explanation-panel" id="ex18_18_exp">
+                        <strong>Thạc sỹ giải thích chi tiết:</strong><br>
+                        • Cụm từ cố định (Collocation) vô cùng phổ biến trong tiếng Anh: <code>make friends</code> có nghĩa là kết bạn, kết giao bằng hữu. Chọn động từ gốc là <strong>make</strong>.
+                    </div>
+                </div>
+            </div>
+
+            <!-- EXERCISE 19 (Reading Comprehension MCQs) -->
+            <div class="exercise-section" id="ex19-card">
+                <div class="section-title">Exercise 19: Reading Comprehension MCQs</div>
+                
+                <h4 style="background:#00C9A7; color:white; padding:5px 10px; border-radius:5px; margin:10px 0;">Đoạn văn ❶: John's Email</h4>
+                <div class="question-wrapper" data-q="ex19_1">
+                    <p class="question-text">1. What is the main idea of the passage?</p>
+                    <div class="options-grid">
+                        <button class="option-btn" onclick="checkMCQ(this, false, 'ex19_1_exp')">A. John wants to invite Sam to a new restaurant.</button>
+                        <button class="option-btn" data-correct="true" onclick="checkMCQ(this, true, 'ex19_1_exp')">B. John is giving Sam directions to his new flat and arranging a meeting.</button>
+                        <button class="option-btn" onclick="checkMCQ(this, false, 'ex19_1_exp')">C. John wants to visit Sam's new school.</button>
+                        <button class="option-btn" onclick="checkMCQ(this, false, 'ex19_1_exp')">D. John is asking Sam for help with his new flat.</button>
+                    </div>
+                    <div class="explanation-panel" id="ex19_1_exp">
+                        <strong>Thạc sỹ giải thích chi tiết:</strong><br>
+                        • Ý chính toàn bài: John viết thư để lên lịch rủ Sam sang chơi nhà mới vào thứ Bảy (arranging a meeting) và chỉ đường rất chi tiết từ bưu điện rẽ trái (giving directions). Do đó phương án <strong>B</strong> bao quát và chính xác nhất.
+                    </div>
+                </div>
+
+                <div class="question-wrapper" data-q="ex19_2">
+                    <p class="question-text">2. What day is better for John to meet?</p>
+                    <div class="options-grid">
+                        <button class="option-btn" onclick="checkMCQ(this, false, 'ex19_2_exp')">A. Friday</button>
+                        <button class="option-btn" onclick="checkMCQ(this, false, 'ex19_2_exp')">B. Monday</button>
+                        <button class="option-btn" onclick="checkMCQ(this, false, 'ex19_2_exp')">C. Sunday</button>
+                        <button class="option-btn" data-correct="true" onclick="checkMCQ(this, true, 'ex19_2_exp')">D. Saturday</button>
+                    </div>
+                    <div class="explanation-panel" id="ex19_2_exp">
+                        <strong>Thạc sỹ giải thích chi tiết:</strong><br>
+                        • Dẫn chứng trực tiếp từ dòng 2 của lá thư: <em>"Saturday is better for me because I don’t have classes on Sunday."</em> (Thứ bảy tiện hơn cho tớ...). Chọn <strong>D. Saturday</strong>.
+                    </div>
+                </div>
+
+                <div class="question-wrapper" data-q="ex19_3">
+                    <p class="question-text">3. What does John want to do in the afternoon?</p>
+                    <div class="options-grid">
+                        <button class="option-btn" onclick="checkMCQ(this, false, 'ex19_3_exp')">A. Go to the cinema.</button>
+                        <button class="option-btn" onclick="checkMCQ(this, false, 'ex19_3_exp')">B. Visit Sam's school.</button>
+                        <button class="option-btn" data-correct="true" onclick="checkMCQ(this, true, 'ex19_3_exp')">C. Go for a walk.</button>
+                        <button class="option-btn" onclick="checkMCQ(this, false, 'ex19_3_exp')">D. Go shopping.</button>
+                    </div>
+                    <div class="explanation-panel" id="ex19_3_exp">
+                        <strong>Thạc sỹ giải thích chi tiết:</strong><br>
+                        • Dẫn chứng rõ ràng trong bài viết: <em>"We can eat at home and then go for a walk in the afternoon."</em> (Chúng ta có thể ăn ở nhà rồi đi dạo bộ vào buổi chiều). Chọn <strong>C</strong>.
+                    </div>
+                </div>
+
+                <div class="question-wrapper" data-q="ex19_4">
+                    <p class="question-text">4. Why is John's address difficult to find?</p>
+                    <div class="options-grid">
+                        <button class="option-btn" data-correct="true" onclick="checkMCQ(this, true, 'ex19_4_exp')">A. The house numbers are strange.</button>
+                        <button class="option-btn" onclick="checkMCQ(this, false, 'ex19_4_exp')">B. It's on a busy road.</button>
+                        <button class="option-btn" onclick="checkMCQ(this, false, 'ex19_4_exp')">C. It's far from the post office.</button>
+                        <button class="option-btn" onclick="checkMCQ(this, false, 'ex19_4_exp')">D. There are no clear landmarks.</button>
+                    </div>
+                    <div class="explanation-panel" id="ex19_4_exp">
+                        <strong>Thạc sỹ giải thích chi tiết:</strong><br>
+                        • Dẫn chứng trong bài đọc: <em>"...but it’s a bit difficult to find because the house numbers are really strange here."</em> (Số nhà ở đây cực kỳ kỳ lạ). Chọn đáp án trùng khớp là <strong>A</strong>.
+                    </div>
+                </div>
+
+                <div class="question-wrapper" data-q="ex19_5">
+                    <p class="question-text">5. What does the word "catch up" in the passage mostly mean?</p>
+                    <div class="options-grid">
+                        <button class="option-btn" onclick="checkMCQ(this, false, 'ex19_5_exp')">A. To play a game together.</button>
+                        <button class="option-btn" data-correct="true" onclick="checkMCQ(this, true, 'ex19_5_exp')">B. To meet after a long time and talk about recent events.</button>
+                        <button class="option-btn" onclick="checkMCQ(this, false, 'ex19_5_exp')">C. To run quickly to reach someone.</button>
+                        <button class="option-btn" onclick="checkMCQ(this, false, 'ex19_5_exp')">D. To finish homework together.</button>
+                    </div>
+                    <div class="explanation-panel" id="ex19_5_exp">
+                        <strong>Thạc sỹ giải thích chi tiết:</strong><br>
+                        • Khái niệm từ vựng phrasal verb: "Catch up" trong ngữ cảnh bạn bè lâu ngày gặp nhau có nghĩa là tụ họp, cùng chia sẻ, nói chuyện về các sự kiện gần đây sau một thời gian dài xa cách. Chọn cụm định nghĩa chuẩn xác nhất là <strong>B</strong>.
+                    </div>
+                </div>
+
+                <h4 style="background:#00C9A7; color:white; padding:5px 10px; border-radius:5px; margin:10px 0;">Đoạn văn ❷: Eton College</h4>
+                <div class="question-wrapper" data-q="ex19_6">
+                    <p class="question-text">1. What can be the best title for the passage?</p>
+                    <div class="options-grid">
+                        <button class="option-btn" data-correct="true" onclick="checkMCQ(this, true, 'ex19_6_exp')">A. Eton College: A Prestigious Private School</button>
+                        <button class="option-btn" onclick="checkMCQ(this, false, 'ex19_6_exp')">B. A Day at a British School</button>
+                        <button class="option-btn" onclick="checkMCQ(this, false, 'ex19_6_exp')">C. Prince William's School Life</button>
+                        <button class="option-btn" onclick="checkMCQ(this, false, 'ex19_6_exp')">D. How to Get into a Famous School</button>
+                    </div>
+                    <div class="explanation-panel" id="ex19_6_exp">
+                        <strong>Thạc sỹ giải thích chi tiết:</strong><br>
+                        • Tiêu đề bao quát: Toàn bộ bài văn giới thiệu chi tiết về lịch sử, học sinh, mức học phí đắt đỏ và cơ sở vật chất hoành tráng của trường Eton College -> Một ngôi trường tư thục danh giá. Chọn <strong>A</strong>. Các câu khác chỉ nói về khía cạnh nhỏ.
+                    </div>
+                </div>
+
+                <div class="question-wrapper" data-q="ex19_7">
+                    <p class="question-text">2. How old is Eton College?</p>
+                    <div class="options-grid">
+                        <button class="option-btn" onclick="checkMCQ(this, false, 'ex19_7_exp')">A. Less than 100 years old.</button>
+                        <button class="option-btn" onclick="checkMCQ(this, false, 'ex19_7_exp')">B. Around 1300 years old.</button>
+                        <button class="option-btn" data-correct="true" onclick="checkMCQ(this, true, 'ex19_7_exp')">C. More than 570 years old.</button>
+                        <button class="option-btn" onclick="checkMCQ(this, false, 'ex19_7_exp')">D. Exactly 18 years old.</button>
+                    </div>
+                    <div class="explanation-panel" id="ex19_7_exp">
+                        <strong>Thạc sỹ giải thích chi tiết:</strong><br>
+                        • Dẫn chứng từ dòng số 2 của đoạn văn: <em>"It is over 570 years old."</em> Cụm từ "over" đồng nghĩa hoàn toàn với "More than" (Nhiều hơn/Trên 570 tuổi). Chọn <strong>C</strong>.
+                    </div>
+                </div>
+
+                <div class="question-wrapper" data-q="ex19_8">
+                    <p class="question-text">3. The word "they" in line 3 refers to _______.</p>
+                    <div class="options-grid">
+                        <button class="option-btn" onclick="checkMCQ(this, false, 'ex19_8_exp')">A. teachers</button>
+                        <button class="option-btn" onclick="checkMCQ(this, false, 'ex19_8_exp')">B. families</button>
+                        <button class="option-btn" data-correct="true" onclick="checkMCQ(this, true, 'ex19_8_exp')">C. students</button>
+                        <button class="option-btn" onclick="checkMCQ(this, false, 'ex19_8_exp')">D. classrooms</button>
+                    </div>
+                    <div class="explanation-panel" id="ex19_8_exp">
+                        <strong>Thạc sỹ giải thích chi tiết:</strong><br>
+                        • Quy chiếu đại từ liên kết câu: Đọc câu trước: <em>"There are about 1, 300 students and they all live..."</em> Từ "they" đóng vai trò thay thế cho danh từ số nhiều đứng ngay trước nó là <strong>students</strong>. Chọn <strong>C</strong>.
+                    </div>
+                </div>
+
+                <div class="question-wrapper" data-q="ex19_9">
+                    <p class="question-text">4. Which of the following facilities is NOT mentioned at Eton College?</p>
+                    <div class="options-grid">
+                        <button class="option-btn" onclick="checkMCQ(this, false, 'ex19_9_exp')">A. A gym</button>
+                        <button class="option-btn" data-correct="true" onclick="checkMCQ(this, true, 'ex19_9_exp')">B. A football pitch</button>
+                        <button class="option-btn" onclick="checkMCQ(this, false, 'ex19_9_exp')">C. Tennis courts</button>
+                        <button class="option-btn" onclick="checkMCQ(this, false, 'ex19_9_exp')">D. A concert hall</button>
+                    </div>
+                    <div class="explanation-panel" id="ex19_9_exp">
+                        <strong>Thạc sỹ giải thích chi tiết:</strong><br>
+                        • Tìm kiếm loại trừ: Đoạn cuối liệt kê rất nhiều cơ sở vật chất bao gồm: a gym, twenty tennis courts, a concert hall. Tuyệt đối hoàn toàn KHÔNG xuất hiện từ khóa "football pitch" (sân bóng đá) trong đoạn văn này. Chọn <strong>B</strong>.
+                    </div>
+                </div>
+
+                <div class="question-wrapper" data-q="ex19_10">
+                    <p class="question-text">5. How many teachers are there at Eton College for every 80 students?</p>
+                    <div class="options-grid">
+                        <button class="option-btn" onclick="checkMCQ(this, false, 'ex19_10_exp')">A. 100</button>
+                        <button class="option-btn" onclick="checkMCQ(this, false, 'ex19_10_exp')">B. 2</button>
+                        <button class="option-btn" onclick="checkMCQ(this, false, 'ex19_10_exp')">C. 160</button>
+                        <button class="option-btn" data-correct="true" onclick="checkMCQ(this, true, 'ex19_10_exp')">D. 1</button>
+                    </div>
+                    <div class="explanation-panel" id="ex19_10_exp">
+                        <strong>Thạc sỹ giải thích chi tiết:</strong><br>
+                        • Dẫn chứng câu cuối cùng của bài đọc: <em>"There is one teacher for 80 students."</em> (Có một giáo viên cho mỗi 80 học sinh). Con số chính xác là <strong>1</strong> (đáp án D).
+                    </div>
+                </div>
+
+                <h4 style="background:#00C9A7; color:white; padding:5px 10px; border-radius:5px; margin:10px 0;">Đoạn văn ❸: Linda's Day</h4>
+                <div class="question-wrapper" data-q="ex19_11">
+                    <p class="question-text">1. What is the main idea of the passage?</p>
+                    <div class="options-grid">
+                        <button class="option-btn" data-correct="true" onclick="checkMCQ(this, true, 'ex19_11_exp')">A. Linda's daily routine as a musician.</button>
+                        <button class="option-btn" onclick="checkMCQ(this, false, 'ex19_11_exp')">B. How to play the piano in a studio.</button>
+                        <button class="option-btn" onclick="checkMCQ(this, false, 'ex19_11_exp')">C. The different types of music Linda plays.</button>
+                        <button class="option-btn" onclick="checkMCQ(this, false, 'ex19_11_exp')">D. Linda's favorite foods and drinks.</button>
+                    </div>
+                    <div class="explanation-panel" id="ex19_11_exp">
+                        <strong>Thạc sỹ giải thích chi tiết:</strong><br>
+                        • Phân tích cấu trúc đoạn văn: Bài đọc liệt kê một chuỗi các mốc thời gian liên tục từ sáng tới đêm: thức dậy lúc 9h, đến studio lúc 10h, ăn trưa lúc 1h, quay lại làm việc lúc 3h, ăn tối lúc 6h... -> Đây chính là lịch trình sinh hoạt hàng ngày (daily routine) của một nhạc sĩ. Chọn <strong>A</strong>.
+                    </div>
+                </div>
+
+                <div class="question-wrapper" data-q="ex19_12">
+                    <p class="question-text">2. What instrument does Linda play?</p>
+                    <div class="options-grid">
+                        <button class="option-btn" onclick="checkMCQ(this, false, 'ex19_12_exp')">A. The guitar</button>
+                        <button class="option-btn" onclick="checkMCQ(this, false, 'ex19_12_exp')">B. The drums</button>
+                        <button class="option-btn" data-correct="true" onclick="checkMCQ(this, true, 'ex19_12_exp')">C. The piano</button>
+                        <button class="option-btn" onclick="checkMCQ(this, false, 'ex19_12_exp')">D. The violin</button>
+                    </div>
+                    <div class="explanation-panel" id="ex19_12_exp">
+                        <strong>Thạc sỹ giải thích chi tiết:</strong><br>
+                        • Dẫn chứng trực tiếp từ câu số 3 trong bài: <em>"She plays the piano."</em> (Cô ấy chơi đàn dương cầm). Chọn đáp án <strong>C</strong>.
+                    </div>
+                </div>
+
+                <div class="question-wrapper" data-q="ex19_13">
+                    <p class="question-text">3. The word "tired" in line 7 is closest in meaning to __________.</p>
+                    <div class="options-grid">
+                        <button class="option-btn" onclick="checkMCQ(this, false, 'ex19_13_exp')">A. energetic</button>
+                        <button class="option-btn" onclick="checkMCQ(this, false, 'ex19_13_exp')">B. happy</button>
+                        <button class="option-btn" data-correct="true" onclick="checkMCQ(this, true, 'ex19_13_exp')">C. exhausted</button>
+                        <button class="option-btn" onclick="checkMCQ(this, false, 'ex19_13_exp')">D. bored</button>
+                    </div>
+                    <div class="explanation-panel" id="ex19_13_exp">
+                        <strong>Thạc sỹ giải thích chi tiết:</strong><br>
+                        • Tìm từ đồng nghĩa nâng cao: "Tired" nghĩa là mệt mỏi. Tính từ nâng cao bậc B2 mang nghĩa cực kỳ mệt mỏi, kiệt sức sau một ngày làm việc dài chính là <strong>exhausted</strong>. Chọn <strong>C</strong>.<br>
+                        • Loại A vì "energetic" (tràn đầy năng lượng) mang nghĩa trái ngược.
+                    </div>
+                </div>
+
+                <div class="question-wrapper" data-q="ex19_14">
+                    <p class="question-text">4. Where does Linda go at one o'clock?</p>
+                    <div class="options-grid">
+                        <button class="option-btn" onclick="checkMCQ(this, false, 'ex19_14_exp')">A. To the concert hall.</button>
+                        <button class="option-btn" data-correct="true" onclick="checkMCQ(this, true, 'ex19_14_exp')">B. To a restaurant.</button>
+                        <button class="option-btn" onclick="checkMCQ(this, false, 'ex19_14_exp')">C. To her home.</button>
+                        <button class="option-btn" onclick="checkMCQ(this, false, 'ex19_14_exp')">D. To another studio.</button>
+                    </div>
+                    <div class="explanation-panel" id="ex19_14_exp">
+                        <strong>Thạc sỹ giải thích chi tiết:</strong><br>
+                        • Dẫn chứng mốc thời gian: <em>"At one o'clock, she goes to the restaurant. She eats lunch with her friends."</em> (Lúc một giờ, cô ấy đến nhà hàng). Chọn phương án chính xác là <strong>B</strong>.
+                    </div>
+                </div>
+
+                <div class="question-wrapper" data-q="ex19_15">
+                    <p class="question-text">5. What does Linda do in the studio in the morning?</p>
+                    <div class="options-grid">
+                        <button class="option-btn" onclick="checkMCQ(this, false, 'ex19_15_exp')">A. She have dinner.</button>
+                        <button class="option-btn" onclick="checkMCQ(this, false, 'ex19_15_exp')">B. She sings for people.</button>
+                        <button class="option-btn" data-correct="true" onclick="checkMCQ(this, true, 'ex19_15_exp')">C. She writes new songs and makes CDs.</button>
+                        <button class="option-btn" onclick="checkMCQ(this, false, 'ex19_15_exp')">D. She meets her friends for lunch.</button>
+                    </div>
+                    <div class="explanation-panel" id="ex19_15_exp">
+                        <strong>Thạc sỹ giải thích chi tiết:</strong><br>
+                        • Dẫn chứng chuỗi hành động buổi sáng: Lúc 10h cô bắt taxi đến phòng thu, và tại đây: <em>"In the studio, she plays the piano. She writes new songs and makes CDs."</em> (Cô viết các bài hát mới và làm đĩa CD). Đáp án trùng khớp hoàn toàn là <strong>C</strong>.
+                    </div>
+                </div>
+            </div>
+
+            <!-- EXERCISE 20 (Sentence Insertion ABCD) -->
+            <div class="exercise-section" id="ex20-card">
+                <div class="section-title">Exercise 20: Cloze Sentence Insertion</div>
+                
+                <h4 style="background:#E84393; color:white; padding:5px 10px; border-radius:5px; margin:10px 0;">Đoạn văn ❶: Lilly Browns</h4>
+                <p style="margin-bottom:10px; font-style:italic;">Lựa chọn: A. but today we aren't | B. Usually I read books in the library | C. I like to study in an international school | D. and my favourite teacher is Mr Oily</p>
+                
+                <div class="question-wrapper" data-q="ex20_1">
+                    <p class="question-text">Blank (1) [Đáp án gốc: C]</p>
+                    <div class="options-grid">
+                        <button class="option-btn" onclick="checkMCQ(this, false, 'ex20_1_exp')">A</button>
+                        <button class="option-btn" onclick="checkMCQ(this, false, 'ex20_1_exp')">B</button>
+                        <button class="option-btn" data-correct="true" onclick="checkMCQ(this, true, 'ex20_1_exp')">C</button>
+                        <button class="option-btn" onclick="checkMCQ(this, false, 'ex20_1_exp')">D</button>
+                    </div>
+                    <div class="explanation-panel" id="ex20_1_exp">
+                        <strong>Thạc sỹ giải thích chi tiết:</strong><br>
+                        • Câu trước giới thiệu tên trường "Dream School". Bạn ấy đưa ra lý do thích trường vì <strong>C. I like to study in an international school</strong> (Tớ thích học ở một ngôi trường quốc tế).
+                    </div>
+                </div>
+
+                <div class="question-wrapper" data-q="ex20_2">
+                    <p class="question-text">Blank (2) [Đáp án gốc: D]</p>
+                    <div class="options-grid">
+                        <button class="option-btn" onclick="checkMCQ(this, false, 'ex20_2_exp')">A</button>
+                        <button class="option-btn" onclick="checkMCQ(this, false, 'ex20_2_exp')">B</button>
+                        <button class="option-btn" onclick="checkMCQ(this, false, 'ex20_2_exp')">C</button>
+                        <button class="option-btn" data-correct="true" onclick="checkMCQ(this, true, 'ex20_2_exp')">D</button>
+                    </div>
+                    <div class="explanation-panel" id="ex20_2_exp">
+                        <strong>Thạc sỹ giải thích chi tiết:</strong><br>
+                        • Câu trước nói về "The teachers" (Các thầy cô giáo tốt bụng), câu sau nói về "He teaches us physics" (Thầy dạy vật lý). Do đó câu chèn nối tiếp logic phải giới thiệu về một thầy giáo cụ thể: <strong>D. and my favourite teacher is Mr Oily</strong>.
+                    </div>
+                </div>
+
+                <div class="question-wrapper" data-q="ex20_3">
+                    <p class="question-text">Blank (3) [Đáp án gốc: B]</p>
+                    <div class="options-grid">
+                        <button class="option-btn" onclick="checkMCQ(this, false, 'ex20_3_exp')">A</button>
+                        <button class="option-btn" data-correct="true" onclick="checkMCQ(this, true, 'ex20_3_exp')">B</button>
+                        <button class="option-btn" onclick="checkMCQ(this, false, 'ex20_3_exp')">C</button>
+                        <button class="option-btn" onclick="checkMCQ(this, false, 'ex20_3_exp')">D</button>
+                    </div>
+                    <div class="explanation-panel" id="ex20_3_exp">
+                        <strong>Thạc sỹ giải thích chi tiết:</strong><br>
+                        • Vế sau của câu ghi phối hợp hành động "...and do my homework at break time" (và làm bài tập vào giờ giải lao). Hành động tương thích đi song hành thường diễn ra ở trường học là <strong>B. Usually I read books in the library</strong> (Thông thường tớ đọc sách trong thư viện).
+                    </div>
+                </div>
+
+                <div class="question-wrapper" data-q="ex20_4">
+                    <p class="question-text">Blank (4) [Đáp án gốc: A]</p>
+                    <div class="options-grid">
+                        <button class="option-btn" data-correct="true" onclick="checkMCQ(this, true, 'ex20_4_exp')">A</button>
+                        <button class="option-btn" onclick="checkMCQ(this, false, 'ex20_4_exp')">B</button>
+                        <button class="option-btn" onclick="checkMCQ(this, false, 'ex20_4_exp')">C</button>
+                        <button class="option-btn" onclick="checkMCQ(this, false, 'ex20_4_exp')">D</button>
+                    </div>
+                    <div class="explanation-panel" id="ex20_4_exp">
+                        <strong>Thạc sỹ giải thích chi tiết:</strong><br>
+                        • Vế trước khẳng định "We wear our uniforms every day" (Chúng tớ mặc đồng phục mỗi ngày), vế sau đưa ra ngoại lệ đi chơi vườn quốc gia "as we're going to have an outing...". Từ nối tương phản bắt buộc là <strong>A. but today we aren't</strong> (nhưng hôm nay thì không).
+                    </div>
+                </div>
+
+                <h4 style="background:#E84393; color:white; padding:5px 10px; border-radius:5px; margin:10px 0;">Đoạn văn ❷: Mai's School</h4>
+                <p style="margin-bottom:10px; font-style:italic;">Lựa chọn: A. We like our school because there are playgrounds | B. 15 girls and 12 boys | C. there is a computer and a blackboard | D. I have lots of things</p>
+
+                <div class="question-wrapper" data-q="ex20_5">
+                    <p class="question-text">Blank (1) [Đáp án gốc: B]</p>
+                    <div class="options-grid">
+                        <button class="option-btn" onclick="checkMCQ(this, false, 'ex20_5_exp')">A</button>
+                        <button class="option-btn" data-correct="true" onclick="checkMCQ(this, true, 'ex20_5_exp')">B</button>
+                        <button class="option-btn" onclick="checkMCQ(this, false, 'ex20_5_exp')">C</button>
+                        <button class="option-btn" onclick="checkMCQ(this, false, 'ex20_5_exp')">D</button>
+                    </div>
+                    <div class="explanation-panel" id="ex20_5_exp">
+                        <strong>Thạc sỹ giải thích chi tiết:</strong><br>
+                        • Phân tích số liệu toán học liên kết câu: Câu trước thông báo sĩ số: "In our class there are 27 students". Câu chèn tiếp theo bổ sung chi tiết phân loại nam nữ thành viên: <strong>B. 15 girls and 12 boys</strong> (Tổng cộng: 15 + 12 = 27 bạn). Cực kỳ chuẩn xác logic.
+                    </div>
+                </div>
+
+                <div class="question-wrapper" data-q="ex20_6">
+                    <p class="question-text">Blank (2) [Đáp án gốc: C]</p>
+                    <div class="options-grid">
+                        <button class="option-btn" onclick="checkMCQ(this, false, 'ex20_6_exp')">A</button>
+                        <button class="option-btn" onclick="checkMCQ(this, false, 'ex20_6_exp')">B</button>
+                        <button class="option-btn" data-correct="true" onclick="checkMCQ(this, true, 'ex20_6_exp')">C</button>
+                        <button class="option-btn" onclick="checkMCQ(this, false, 'ex20_6_exp')">D</button>
+                    </div>
+                    <div class="explanation-panel" id="ex20_6_exp">
+                        <strong>Thạc sỹ giải thích chi tiết:</strong><br>
+                        • Ngữ cảnh miêu tả đồ vật trong không gian lớp học: "In our class...". Chọn <strong>C. there is a computer and a blackboard</strong> (có một chiếc máy tính và một tấm bảng đen) để tiếp nối mạch liệt kê nội thất phòng học của cô Thủy.
+                    </div>
+                </div>
+
+                <div class="question-wrapper" data-q="ex20_7">
+                    <p class="question-text">Blank (3) [Đáp án gốc: D]</p>
+                    <div class="options-grid">
+                        <button class="option-btn" onclick="checkMCQ(this, false, 'ex20_7_exp')">A</button>
+                        <button class="option-btn" onclick="checkMCQ(this, false, 'ex20_7_exp')">B</button>
+                        <button class="option-btn" onclick="checkMCQ(this, false, 'ex20_7_exp') text-transform:none;">C</button>
+                        <button class="option-btn" data-correct="true" onclick="checkMCQ(this, true, 'ex20_7_exp')">D</button>
+                    </div>
+                    <div class="explanation-panel" id="ex20_7_exp">
+                        <strong>Thạc sỹ giải thích chi tiết:</strong><br>
+                        • Câu sau đi kèm dấu hai chấm liệt kê một loạt dụng cụ học sinh: "a pencil sharpener, two pencils, a rubber...". Câu khái quát đứng trước dấu hai chấm bắt buộc phải là: <strong>D. I have lots of things in my pencil case</strong> (Tớ có rất nhiều thứ trong hộp bút của mình: ...).
+                    </div>
+                </div>
+
+                <div class="question-wrapper" data-q="ex20_8">
+                    <p class="question-text">Blank (4) [Đáp án gốc: A]</p>
+                    <div class="options-grid">
+                        <button class="option-btn" data-correct="true" onclick="checkMCQ(this, true, 'ex20_8_exp')">A</button>
+                        <button class="option-btn" onclick="checkMCQ(this, false, 'ex20_8_exp')">B</button>
+                        <button class="option-btn" onclick="checkMCQ(this, false, 'ex20_8_exp')">C</button>
+                        <button class="option-btn" onclick="checkMCQ(this, false, 'ex20_8_exp')">D</button>
+                    </div>
+                    <div class="explanation-panel" id="ex20_8_exp">
+                        <strong>Thạc sỹ giải thích chi tiết:</strong><br>
+                        • Vế sau tiếp tục liệt kê cơ sở vật chất vui chơi, vận động của trường học: "...a big gym and a fantastic music room". Câu mở đầu đoạn phù hợp nhất là lý do yêu mến trường: <strong>A. We like our school because there are playgrounds</strong> (Chúng tớ yêu trường mình vì có sân chơi).
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- SUBMIT BOTTOM BAR -->
+    <div class="action-bar">
+        <button class="btn-submit" onclick="gradeQuiz()">NỘP BÀI KẾT QUẢ ĐẠT ĐƯỢC 🏆</button>
+    </div>
+
+    <!-- MODAL SCOREBOARD -->
+    <div class="modal-overlay" id="score-modal">
+        <div class="score-card" id="score-card-content">
+            <h2 style="font-size:2rem; color:#2D3436;">🎉 KẾT QUẢ BÀI LÀM CỦA BẠN 🎉</h2>
+            <div class="score-num" id="final-score-display">0/33</div>
+            <div class="score-feedback" id="final-feedback-text">Đang tính toán...</div>
+            <button class="btn-close-modal" onclick="closeModal()">Xem Lại Lời Giải Chi Tiết 📖</button>
+        </div>
+    </div>
+
+    <script>
+        // WEB AUDIO API - Sound Synthesis (No External Links)
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+
+        function playSound(type) {
+            if (audioCtx.state === 'suspended') {
+                audioCtx.resume();
+            }
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+
+            if (type === 'correct') {
+                // Ding sound effect
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(523.25, audioCtx.currentTime); // C5
+                osc.frequency.setValueAtTime(659.25, audioCtx.currentTime + 0.1); // E5
+                gain.gain.setValueAtTime(0.3, audioCtx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.4);
+                osc.start();
+                osc.stop(audioCtx.currentTime + 0.4);
+            } else if (type === 'wrong') {
+                // Téo tèo tèo failure bray sound
+                osc.type = 'sawtooth';
+                osc.frequency.setValueAtTime(150, audioCtx.currentTime);
+                osc.frequency.linearRampToValueAtTime(100, audioCtx.currentTime + 0.3);
+                gain.gain.setValueAtTime(0.2, audioCtx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.35);
+                osc.start();
+                osc.stop(audioCtx.currentTime + 0.35);
+            }
+        }
+
+        // CONFETTI EFFECT (Canvas-based game graphics)
+        const canvas = document.getElementById('confetti-canvas');
+        const ctx = canvas.getContext('2d');
+        let confetti = [];
+        let animationFrameId;
+
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+
+        function createConfetti() {
+            confetti = [];
+            for (let i = 0; i < 150; i++) {
+                confetti.push({
+                    x: Math.random() * canvas.width,
+                    y: Math.random() * canvas.height - canvas.height,
+                    r: Math.random() * 6 + 4,
+                    d: Math.random() * canvas.height,
+                    color: `hsl(${Math.random() * 360}, 100%, 50%)`,
+                    tilt: Math.random() * 10 - 5,
+                    tiltAngleIncremental: Math.random() * 0.07 + 0.02,
+                    tiltAngle: 0
+                });
+            }
+        }
+
+        function drawConfetti() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            let remaining = false;
+            confetti.forEach((p, idx) => {
+                p.tiltAngle += p.tiltAngleIncremental;
+                p.y += (Math.cos(p.d) + 3 + p.r / 2) / 2;
+                p.x += Math.sin(p.tiltAngle);
+                p.tilt = Math.sin(p.tiltAngle - idx / 3) * 15;
+
+                if (p.y <= canvas.height) remaining = true;
+
+                ctx.beginPath();
+                ctx.lineWidth = p.r;
+                ctx.strokeStyle = p.color;
+                ctx.moveTo(p.x + p.tilt + p.r / 2, p.y);
+                ctx.lineTo(p.x + p.tilt, p.y + p.tilt + p.r / 2);
+                ctx.stroke();
+            });
+            if (remaining) {
+                animationFrameId = requestAnimationFrame(drawConfetti);
+            }
+        }
+
+        function triggerConfettiAnimation() {
+            cancelAnimationFrame(animationFrameId);
+            createConfetti();
+            drawConfetti();
+        }
+
+        // COUNTDOWN TIMER MODULE
+        let timerDuration = 600; // 10 minutes in seconds
+        let timerInterval = null;
+        let isTimerRunning = false;
+
+        function updateTimerDisplay() {
+            const mins = Math.floor(timerDuration / 60);
+            const secs = timerDuration % 60;
+            document.getElementById('timer-display').innerText = 
+                `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+        }
+
+        function toggleTimer() {
+            const btn = document.getElementById('timer-toggle-btn');
+            if (isTimerRunning) {
+                // Pause timer
+                clearInterval(timerInterval);
+                isTimerRunning = false;
+                btn.innerText = "TIẾP TỤC LÀM BÀI ▶️";
+                btn.style.background = "#00C9A7";
+            } else {
+                // Start / Resume timer
+                isTimerRunning = true;
+                btn.innerText = "TẠM DỪNG ĐỒNG HỒ ⏸️";
+                btn.style.background = "#FF4757";
+                
+                timerInterval = setInterval(() => {
+                    if (timerDuration > 0) {
+                        timerDuration--;
+                        updateTimerDisplay();
+                    } else {
+                        clearInterval(timerInterval);
+                        isTimerRunning = false;
+                        btn.innerText = "HẾT GIỜ LÀM BÀI ⏰";
+                        alert("Đã hết giờ làm bài. Bạn vẫn có thể tiếp tục làm, nhưng nhớ là trong phòng thi thật, bạn chỉ nên làm một bài như thế này trong 10 phút thôi nha.");
+                    }
+                }, 1000);
+            }
+        }
+
+        // TOGGLE TRANSLATION TEXT BOXES
+        function toggleTranslation(id) {
+            const box = document.getElementById(id);
+            if(box.style.display === 'block') {
+                box.style.display = 'none';
+            } else {
+                box.style.display = 'block';
+            }
+        }
+
+        // INTERACTIVE ELEMENT 1: INLINE BLANK (True/False Clicking)
+        function revealBlank(element, expId) {
+            const answer = element.getAttribute('data-ans');
+            element.innerText = ` ${answer} `;
+            if(answer === 'T') {
+                element.className = "inline-blank revealed-t";
+                playSound('correct');
+            } else {
+                element.className = "inline-blank revealed-f";
+                playSound('wrong');
+            }
+            // Auto open the detailed teacher explanation card
+            document.getElementById(expId).style.display = "block";
+        }
+
+        // INTERACTIVE ELEMENT 2: MULTIPLE CHOICE QUESTION SELECTION
+        function checkMCQ(button, isCorrect, expId) {
+            const parentWrapper = button.closest('.question-wrapper');
+            const allButtons = parentWrapper.querySelectorAll('.option-btn');
+            
+            // Disable all other buttons in this block to prevent double cheating click
+            allButtons.forEach(btn => {
+                btn.classList.add('disabled');
+                btn.disabled = true;
+            });
+
+            if (isCorrect) {
+                button.classList.add('correct-choice');
+                playSound('correct');
+            } else {
+                button.classList.add('wrong-choice');
+                playSound('wrong');
+                // Instantly reveal the absolute correct answer as requested by policy
+                allButtons.forEach(btn => {
+                    if (btn.getAttribute('data-correct') === 'true') {
+                        btn.classList.add('correct-choice');
+                    }
+                });
+            }
+            // Reveal explanation
+            document.getElementById(expId).style.display = "block";
+        }
+
+        // AUTOMATED SHUFFLE ARRAY ALGORITHM FOR OPTIONS (A, B, C, D Gamification Randomizer)
+        function shuffleOptions() {
+            const grids = document.querySelectorAll('.options-grid');
+            grids.forEach(grid => {
+                const buttons = Array.from(grid.children);
+                // Simple Fisher-Yates shuffle algorithm variation
+                for (let i = buttons.length - 1; i > 0; i--) {
+                    const j = Math.floor(Math.random() * (i + 1));
+                    grid.appendChild(buttons[j]);
+                }
+            });
+        }
+
+        // GRAND FINALE: GRADING & MODAL REPORT CARD GENERATOR
+        function gradeQuiz() {
+            let correctCount = 0;
+            let totalQuestions = 0;
+
+            // 1. Grade True/False Blanks
+            const blanks = document.querySelectorAll('.inline-blank');
+            blanks.forEach(b => {
+                totalQuestions++;
+                if(b.classList.contains('revealed-t') || b.classList.contains('revealed-f')) {
+                    // Check if student clicked it correctly according to original answer matching
+                    const currentText = b.innerText.trim();
+                    if(currentText === b.getAttribute('data-ans')) {
+                        correctCount++;
+                    }
+                }
+            });
+
+            // 2. Grade MCQ Buttons
+            const questionBlocks = document.querySelectorAll('.question-wrapper[data-q]');
+            questionBlocks.forEach(block => {
+                totalQuestions++;
+                const selectedCorrect = block.querySelector('.option-btn.correct-choice');
+                // If student clicked the correct option originally
+                if (selectedCorrect && !selectedCorrect.classList.contains('wrong-choice')) {
+                    // Check if it was clicked actively by student
+                    correctCount++;
+                }
+            });
+
+            // Calculate feedback text based on scores achieved
+            const scoreDisplay = document.getElementById('final-score-display');
+            const feedbackText = document.getElementById('final-feedback-text');
+            
+            scoreDisplay.innerText = `${correctCount}/${totalQuestions}`;
+            
+            const percentage = (correctCount / totalQuestions) * 100;
+            if (percentage >= 90) {
+                feedbackText.innerText = "🏆 THIÊN TÀI TIẾNG ANH XUẤT SẮC! Thầy cô vô cùng tự hào về con, làm bài siêu cấp tuyệt vời luôn nha! 🎉✨";
+                triggerConfettiAnimation();
+            } else if (percentage >= 65) {
+                feedbackText.innerText = "🌟 LÀM TỐT LẮM! Con đã nắm rất vững kiến thức đọc hiểu rồi nè. Hãy tiếp tục phát huy con nhé!";
+                triggerConfettiAnimation();
+            } else {
+                feedbackText.innerText = "💪 CỐ LÊN NHÉ HỌC TRÒ ƠI! Đừng nản chí nha, hãy đọc thật kỹ phần giải thích chi tiết của Ms Lê Hằng ở bên dưới để lần sau bứt phá điểm số nhé!";
+            }
+
+            // Open popup window modal layout smoothly
+            const overlay = document.getElementById('score-modal');
+            overlay.style.display = "flex";
+            setTimeout(() => {
+                document.getElementById('score-card-content').classList.add('open');
+            }, 50);
+        }
+
+        function closeModal() {
+            document.getElementById('score-card-content').classList.remove('open');
+            setTimeout(() => {
+                document.getElementById('score-modal').style.display = "none";
+            }, 200);
+        }
+
+        // Initialize shuffler on website rendering start load
+        window.onload = () => {
+            shuffleOptions();
+        };
+    </script>
+</body>
+</html>
